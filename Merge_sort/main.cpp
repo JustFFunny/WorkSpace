@@ -1,4 +1,5 @@
-//归并排虚   递归
+//只是一个 两个数组的比较而已(不是归并排序),
+//且两个数组已经排序
 #include <iostream>
 
 using namespace std;
@@ -54,26 +55,21 @@ void merger_sort(int *p,int num)//数组是偶数
         p[k]=ichildF[i];
         ++k;
     }
-
     for(;j<ichildNum;++j)
     {
         p[k]=ichildS[j];
         ++k;
     }
-
-    cout<<" sort result:"<<"\n";
-    display(p,num);
-
-
-
     return;
 }
 
 int main()
 {
-    int array[]={2,8,10,200,1,10,99,400};
+     int array[]={2,8,10,200,1,10,99,400};
+
     size_t num=sizeof(array)/sizeof(int);
     merger_sort(array,num);
+    display(array,num);
     cout << "Hello World!" << endl;
     return 0;
 }
