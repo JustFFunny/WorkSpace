@@ -1,11 +1,7 @@
 //只是一个 两个数组的比较而已(不是归并排序),
 //且两个数组已经排序
 #include <iostream>
-
 using namespace std;
-
-
-
 void display(int *p,int num)
 {
     for(int k=0;k<num;++k)
