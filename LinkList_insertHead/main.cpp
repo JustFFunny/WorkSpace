@@ -46,26 +46,40 @@ int creatLinkList(LinkList *linkList ,int n)
     return 0;
 }
 
-//显示
-void dispaly(LinkList linkList,int n)
+//显示   查找返回位置
+int dispaly(LinkList linkList,const int n,const int num)
 {
     int i=0;
     //linkList=linkList->nextNode;
     while(i<=n)
     {
         cout<<linkList->data<<" ";
+        if(linkList->data==num)
+        {
+            return i;
+        }
         linkList=linkList->nextNode;
         ++i;
     }
+
+    return -1;
     cout<<"\n";
 }
-
 
 int main()
 {
     LinkList link = NULL;
     creatLinkList(&link,10);
-    dispaly(link,10);
+    int _pos= dispaly(link,10,1);
+    if(_pos==-1)
+    {
+        cout<<"search failed!"<<"\n";
+    }
+    else
+    {
+        cout<<"search succeed:"<< _pos<<"\n";//位置 从0开始
+
+    }
     free(link);
     link=NULL;
     cout << "Hello World!" << endl;
