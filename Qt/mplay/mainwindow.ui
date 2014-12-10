@@ -6,26 +6,166 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>487</width>
-    <height>436</height>
+    <width>627</width>
+    <height>499</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>407</width>
+    <height>199</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>340</y>
-      <width>101</width>
-      <height>27</height>
+      <x>70</x>
+      <y>40</y>
+      <width>481</width>
+      <height>411</height>
      </rect>
     </property>
-    <property name="text">
-     <string>PushButton</string>
-    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QWidget" name="widget" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>479</width>
+         <height>299</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox">
+       <property name="font">
+        <font>
+         <weight>50</weight>
+         <bold>false</bold>
+         <underline>false</underline>
+        </font>
+       </property>
+       <property name="mouseTracking">
+        <bool>false</bool>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QGroupBox
+{
+border-width:2px;
+border-style:solid;
+border-corlor:white;
+magin-top:0.5px;
+}
+</string>
+       </property>
+       <property name="inputMethodHints">
+        <set>Qt::ImhNone</set>
+       </property>
+       <property name="title">
+        <string notr="true"/>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QSlider" name="horizontalSlider">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout">
+            <property name="horizontalSpacing">
+             <number>2</number>
+            </property>
+            <property name="verticalSpacing">
+             <number>0</number>
+            </property>
+            <item row="0" column="0">
+             <widget class="QPushButton" name="pre">
+              <property name="text">
+               <string>pre</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="next">
+              <property name="text">
+               <string>next</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QPushButton" name="quiet">
+              <property name="text">
+               <string>静音</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QPushButton" name="fast">
+              <property name="text">
+               <string>fast</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QPushButton" name="pushButton">
+              <property name="text">
+               <string>play</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QPushButton" name="pushButton_2">
+              <property name="text">
+               <string>pause</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QPushButton" name="v_">
+              <property name="text">
+               <string>V-</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QPushButton" name="v2">
+              <property name="text">
+               <string>V+</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
+       <zorder>horizontalSlider</zorder>
+       <zorder></zorder>
+       <zorder></zorder>
+       <zorder></zorder>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -33,7 +173,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>487</width>
+     <width>627</width>
      <height>25</height>
     </rect>
    </property>

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QProcess>
+#include <QTimer>
 
 namespace Ui {
 class MainWindow;
@@ -17,10 +18,22 @@ public:
     ~MainWindow();
     QWidget * playform;
     QProcess * process;
+    bool m_bfalse;
+    QTimer * m_timer;
 public slots:
-    void result();
+    void play();
+    void stop();
+
+
+   void quiet();
+   void next();
+   void pre();
+   void v_();
+   void v2();
+   void move();
 private:
     Ui::MainWindow *ui;
+    int i;
 };
 
 #endif // MAINWINDOW_H
