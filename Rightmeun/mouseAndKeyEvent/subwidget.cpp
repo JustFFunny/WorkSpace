@@ -1,3 +1,6 @@
+/*
+还有一种 方式重新    contectMenuEvent
+*/
 #include "subwidget.h"
 #include <QMouseEvent>
 #include <QKeyEvent>
