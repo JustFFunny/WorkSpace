@@ -2,8 +2,7 @@
 #define ANIMALWIDGET_H
 
 #include <QWidget>
-#include <QPropertyAnimation>
-
+class QPropertyAnimation;
 class AnimalWidget : public QWidget
 {
     Q_OBJECT

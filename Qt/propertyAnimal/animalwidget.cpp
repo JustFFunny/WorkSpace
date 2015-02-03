@@ -1,5 +1,5 @@
 #include "animalwidget.h"
-
+#include <QPropertyAnimation>
 #include <QPushButton>
 #include <QHBoxLayout>
 
