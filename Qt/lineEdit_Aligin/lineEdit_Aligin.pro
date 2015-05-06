@@ -7,6 +7,8 @@
 QT       += core
 
 QT       += gui
+QT       += script
+QT       +=webkit
 
 TARGET = lineEdit_Aligin
 CONFIG   += console
