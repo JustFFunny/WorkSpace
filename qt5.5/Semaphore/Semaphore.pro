@@ -1,15 +1,14 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2015-01-27T16:30:29
+# Project created by QtCreator 2015-08-10T17:20:56
 #
 #-------------------------------------------------
 
 QT       += core
 
-QT       += gui
-QT       +=sql
+QT       -= gui
 
-TARGET = dbConnect
+TARGET = Semaphore
 CONFIG   += console
 CONFIG   -= app_bundle
 
