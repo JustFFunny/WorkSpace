@@ -1,0 +1,16 @@
+#!/bin/sh 
+svn update 
+REV=$(svn info|grep Revision | cut -f 2 -d ' ')
+FILE=src/main/revision.h
+echo "Revision $REV" 
+echo "#ifndef _REVISION_H_" > $FILE
+echo "#define _REVISION_H_" >> $FILE
+echo "#define REVISION $REV" >> $FILE
+echo -e "#endif\n"  >> $FILE 
+
+#svn ci -m "@$" 
+
+sed s/_REV_/$REV/  installer/Fkbd.nsi.raw > installer/Fkbd.nsi
+sed s/_REV_/$REV/  installer/Fkbd_vc.nsi.raw > installer/Fkbd_vc.nsi 
+
+svn ci -m "@$" 
