@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/pro">
+        <file>language/mainwindow_cn.qm</file>
+        <file>language/mainwindow_cn.ts</file>
+    </qresource>
+</RCC>

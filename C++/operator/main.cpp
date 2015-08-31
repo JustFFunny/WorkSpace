@@ -37,6 +37,10 @@ int main()
     cout<< 6*r<<"\n";//   自动调用 operator double()函数
     cout << "Hello World!" << endl;
     Name _name("abd");//隐士转换 string  -> Name
+
+
+
+
     return 0;
 }
 

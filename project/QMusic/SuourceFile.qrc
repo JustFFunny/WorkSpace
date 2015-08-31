@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/Button">
+        <file>style/next.png</file>
+        <file>style/play.png</file>
+        <file>style/prev.png</file>
+        <file>style/push.png</file>
+        <file>style/stop.png</file>
+    </qresource>
+    <qresource prefix="/Memu">
+        <file>style/add.png</file>
+        <file>style/mu.png</file>
+        <file>style/remove.png</file>
+        <file>style/style.png</file>
+    </qresource>
+    <qresource prefix="/ICON">
+        <file>style/logo.png</file>
+        <file>style/bg.png</file>
+    </qresource>
+</RCC>

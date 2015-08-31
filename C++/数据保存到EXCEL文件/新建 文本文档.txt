@@ -1,0 +1,11 @@
+
+	CSaveToXsl xls ;
+	xls.GetFileName("shuai.xls");//设置EXCEL文件名
+
+	xls.Initialize("表的名字","索引 TEXT, 方向 TEXT,时间 TEXT",
+			"索引,方向,时间");
+
+	//参数1： 表名  。参数2 ：设置字段的 SQL 语句。 参数3 ：保存字段的值，供插入时使用。
+	//初始化时打开数据库并建表
+
+	xls.InsertToTable(" '字段1', '字段2' , '字段3' ");//插入一行到表中
