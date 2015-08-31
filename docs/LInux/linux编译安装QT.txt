@@ -1,0 +1,217 @@
+1.下载源码 qt 源码
+二、解压代码
+
+tar zxvf qt-everywhere-opensource-src-4.8.2.tar.gz
+
+三、执行./config生成makefile
+
+./config
+
+下面出现对话框选择open source edition.这是自由版。输入yes接受协议。
+
+四、编译QT
+
+执行make命令，需要2个小时。
+
+五、安装QT
+
+运行make install命令。需要几分钟时间，默认安装到/usr/local/Trolltech/Qt-4.8.2. 运行/usr/local/Trolltech/Qt-4.5.3/bin/designer ，若能启动QT，说明QT已经安装好了。
+
+六、设置环境变量
+
+更改用户环境变量
+
+gedit  /home/envi/.bashrc
+
+添加：
+
+export QTDIR=/usr/local/Trolltech/Qt-4.8.2
+
+export PATH=$QTDIR/bin:$PATH
+
+export MANPATH=$QTDIR/man:$MANPATH
+
+export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
+
+更改包括root用户的环境变量
+
+sudo gedit /etc/profile
+
+添加：
+
+export QTDIR=/usr/local/Trolltech/Qt-4.8.2
+
+export PATH=$QTDIR/bin:$PATH
+
+export MANPATH=$QTDIR/man:$MANPATH
+
+export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
+
+七、测试环境变量
+
+重启测试环境变量：
+
+qmake -v
+
+显示版本信息：
+
+QMake version 2.01a
+
+Using Qt version 4.8.2 in /usr/local/Trolltech/Qt-4.8.2/lib
+
+which qmake
+
+显示安装位置信息：
+
+/usr/local/Trolltech/Qt-4.8.2/bin/qmake
+
+环境变量设置成功。
+
+
+
+
+
+
+ 方案二:
+本文介绍的是Linux 下编译并安装配置 Qt，最近准备做 Nokia 的 Symbian,Maemo 下触摸屏开发。考虑到程序的跨平台可移植性，最终选择使用 Qt 开发。相对来说，国内关于 Qt 相关文档并不算很多。作者将 Linux 下编译并安装配置 Qt 全过程总结了一下，只希望可以方便更多的朋友！
+
+1、获得源代码
+
+src 官网下载地址：ftp://ftp.qt.nokia.com/qt/source/
+
+2009 年 10 月 1 日发布的 qt-x11-opensource-src-4.5.3.tar.gz，大小 122 Mb。
+
+2、解压缩
+
+    tar xvfz qt-x11-opensource-src-4.5.3.tar.gz 
+
+3、生成 makefile 文件
+
+    ./configure 
+
+这个时候他会问你：“Which edition of Qt do you want to use?”
+
+然后给你两个类型供选择：
+
+    Type ''c'' if you want to use the Commercial Edition.  
+    Type ''o'' if you want to use the Open Source Edition. 
+
+第一个是商业版，第二个是自由版。
+
+选择 ''o''（Qt/嵌入式自由版是Qt为了开发自由软件提供的嵌入式版本）。
+
+这时候，出现许可界面。
+
+选择  ''yes'' 接受许可协议。
+
+开始生成 makefile 文件。这个大约需要 5 -10 分钟的时间。
+
+4、Qt 编译
+
+    gmake 
+
+这个过程时间比较长，需要两个小时左右。
+
+5、Qt 安装
+
+运行 gmake install
+
+默认安装至 /usr/local/Trolltech/Qt-4.5.3
+
+大约 5 － 10 分钟。正常结束，安装完毕。
+
+运行 /usr/local/Trolltech/Qt-4.5.3/bin/designer ，看见 qt 启动，也就是说 qt 安装好了。
+
+6、设置环境变量
+
+一、先修改用户环境变量
+
+    vi /home/defonds/.bashrc 
+
+在其最后添加以下信息
+
+    export QTDIR=/usr/local/Trolltech/Qt-4.5.3  
+    export PATH=$QTDIR/bin:$PATH  
+    export MANPATH=$QTDIR/man:$MANPATH  
+    export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH 
+
+二、再修改所有用户环境变量
+
+    vi /etc/profile 
+
+在其最后添加以下信息
+
+    export QTDIR=/usr/local/Trolltech/Qt-4.5.3  
+    export PATH=$QTDIR/bin:$PATH  
+    export MANPATH=$QTDIR/man:$MANPATH  
+    export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH 
+
+三、测试一下
+
+重新开一个终端，输入命令：
+
+    qmake -v 
+
+输出结果：
+
+    QMake version 2.01a  
+     Using Qt version 4.5.3 in /usr/local/Trolltech/Qt-4.5.3/lib 
+
+输入命令：
+
+    which qmake 
+
+输出结果：
+
+    /usr/local/Trolltech/Qt-4.5.3/bin/qmake 
+
+证明 Qt 环境变量已经被配置成功。
+
+编者按 ：
+
+Linux 启动时，先读取用户环境变量，即 /home/defonds/.bashrc 的设置。次读取所有用户环境变量，即 /etc/profile 中的配置。
+
+开始 Qt
+
+写个简单的 Qt 程序使用安装的 Qt 编译来测试一下它的工作效果
+
+新建一个文件名为 hello.cpp，其内容如下：
+
+    view plaincopy to clipboardprint?#include <QApplication>     
+    #include <QLabel>     
+    int main(int argc,char *argv[])    
+    {    
+        QApplication app(argc,argv);    
+        QLabel *label = new QLabel("Hello Qt!");    
+        label->show();    
+        return app.exec();    
+    }    
+    #include <QApplication> 
+    #include <QLabel> 
+    int main(int argc,char *argv[])  
+    {  
+     QApplication app(argc,argv);  
+     QLabel *label = new QLabel("Hello Qt!");  
+     label->show();  
+     return app.exec();  
+    }  
+
+保存 hello.cpp，编译过程如下：
+
+在 hello.cpp 所在目录下，运行命令
+
+    qmake -project 
+
+hello.cpp 同目录下有 hello.pro 文件被生成，它是与平台无关的工程文件。
+
+在 hello.cpp 所在目录下，运行命令
+
+    qmake hello.pro 
+
+同目录下有 Makefile 文件被生成（Makefile是指导编译器编译源代码的配置文件，在其目录下输入make命令(nmake在win32,vc6环境)就可以完成编译）。在 hello.cpp 所在目录下，运行命令
+
+    make 
+
+同目录下有 hello,hello.o 两个文件被编译生成。其中 hello 就是在当前 Linux 系统下使用 Qt 编译生成的可执行文件了。双击运行 hello，“Hello Qt!“ 文本框弹出，OK！做到这一步，证明 Qt 已经完全可以在你的电脑上运作了。还等什么呢，开始你精彩而又愉快的 Qt 开发之旅吧！
+
+小结：关于Linux 下编译并安装配置 Qt （完整版）的内容介绍完了，希望本文对你有所帮助！

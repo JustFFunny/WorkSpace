@@ -1,0 +1,21 @@
+wuqiankun@wuqiankun-OptiPlex-360:/$ adb shell ls -ld  /sdcard
+lrwxrwxrwx root     root              2014-08-26 16:35 sdcard -> /mnt/sdcard
+
+
+wuqiankun@wuqiankun-OptiPlex-360:/$ adb shell ls -ld  /sdcard/documents
+drwxrwxr-x system   sdcard_rw          2014-09-02 09:20 documents
+wuqiankun@wuqiankun-OptiPlex-360:/$ adb  push /home/wuqiankun/phonedir/adb  /sdcard/
+708 KB/s (97108 bytes in 0.133s)
+
+wuqiankun@wuqiankun-OptiPlex-360:/$ adb  push /home/wuqiankun/phonedir/adb  /
+failed to copy '/home/wuqiankun/phonedir/adb' to '//adb': Read-only file system
+wuqiankun@wuqiankun-OptiPlex-360:/$ adb  push /home/wuqiankun/phonedir/adb  /tmpfailed to copy '/home/wuqiankun/phonedir/adb' to '/tmp/adb': Read-only file system
+wuqiankun@wuqiankun-OptiPlex-360:/$ adb  push /home/wuqiankun/phonedir/adb  /system/app/
+failed to copy '/home/wuqiankun/phonedir/adb' to '/system/app//adb': Read-only file system
+
+wuqiankun@wuqiankun-OptiPlex-360:/$ adb  push /home/wuqiankun/phonedir/default.prop  /system/app/
+failed to copy '/home/wuqiankun/phonedir/default.prop' to '/system/app//default.prop': Read-only file system
+
+wuqiankun@wuqiankun-OptiPlex-360:/$ adb  push /home/wuqiankun/phonedir/default.prop  /sdcard/
+0 KB/s (116 bytes in 0.163s)
+

@@ -1,0 +1,47 @@
+http://blog.csdn.net/robertkun/article/details/5960502
+// 第三步 绘制文字  
+void drawText(QPainter* painter, QPointF& p, QString& text, const QTextCharFormat& fmt,  const QBrush& brush)  
+{  
+    painter->setRenderHint(QPainter::Antialiasing, true);  
+    painter->setRenderHint(QPainter::TextAntialiasing, true);  
+    QFont f = fmt.font();  
+    f.resolve(QFont::AllPropertiesResolved);  
+  
+    // 获得第个文字的大小。。  
+    QFontMetricsF fm(f);  
+    QRectF textBoundingRect = fm.boundingRect(text);  
+    // draw text  
+    if(needDrawText(fmt) || brush.style() != Qt::NoBrush)  
+    {         
+        painter->setFont(f);  
+        QPen pen;  
+        if(brush.style() == Qt::NoBrush)  
+        {  
+            QBrush t = fmt.foreground();  
+            if (t.style() == Qt::NoBrush)  
+                pen.setBrush(QBrush(QColor(255,255,255)));  
+            else if(t.style() != Qt::SolidPattern)  
+                pen = QPen(t,0);  
+            else  
+            {  
+                QColor c = t.color();  
+                QColor cc = c.toRgb();  
+                pen.setBrush(QBrush(cc));  
+            }  
+        }  
+        else  
+        {  
+            if (brush.style() != Qt::SolidPattern)  
+                pen = QPen(brush, 0);  
+            else  
+            {     
+                pen.setBrush(brush);  
+            }  
+        }  
+        painter->setPen(pen);  
+        // draw text.  
+        painter->drawText(p, text);  
+    }  
+  
+    p += QPointF(textBoundingRect.width(), 0);  
+}  

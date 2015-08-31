@@ -1,0 +1,87 @@
+//http://wiki.qt.io/Transition_from_Qt_4.x_to_Qt5
+//http://doc.qt.io/qt-5/sourcebreaks.html        ApiChanges
+1.执行完毕后，可以发现它将原先的QtGui替换成了QtWidgets，如：
+
+-#include <QtGui/QApplication>
++#include <QtWidgets/QApplication>
+然后，将工程文件(.pro文件)中加上：
+
+QT += widgets
+
+再手工尝试编译，还是报错，原来Qt5取消了toAscii()函数，全局查找替换，将它替换为toLatin1()后问题就解决了
+
+
+2.
+
+settings->value("shellBackgroundColor", (Qt::white)).value<QColor>();
+../../Qt5.5.0/5.5/gcc/include/QtCore/qvariant.h:479:5: error: 'QVariant::QVariant(Qt::GlobalColor)' is private
+../Lphone_pc/widgets/settingswidget.cpp:432:56: error: within this context
+解决:
+ settings->value("shellBackgroundColor", QColor(Qt::white)).value<QColor>();
+
+3.../Lphone_pc/widgets/filewidget.cpp:9:23: fatal error: QColorGroup: No such file or directory
+compilation terminated.
+
+4.QDesktopServices::storageLocation deprecated
+
+error: 'storageLocation' is not a member of 'QDesktopServices'
+error: 'DataLocation' is not a member of 'QDesktopServices'
+
+Use QStandardPaths::StandardLocation:
+
+QString path = s.value("db.path", QDesktopServices::storageLocation(QDesktopServices::DataLocation)).toString();
+
+to
+
+QString path = s.value("db.path", QStandardPaths::standardLocations(QStandardPaths::DataLocation)).toString();
+
+
+解决:
+
+ QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);//获取桌面路径
+
+
+
+5.error: 'class QString' has no member named 'toAscii'
+
+
+Replace all instances of
+
+fromAscii()
+toAscii()
+
+to
+
+fromLatin1()
+toLatin1()
+
+For example, given the Qt 4 code
+
+QByteArray configfileti = TMP_Config.toAscii();
+
+you would change to
+
+QByteArray configfileti = TMP_Config.toLatin1();
+
+6.
+../Lphone_pc/classes/models/messagethreadmodel.cpp:184:23: error: 'setRoleNames' was not declared in this scope
+
+error  setRoleNames(),可能出现的error
+
+
+7. Qt::WFlags   This typedef is obsolete. Use Qt::WindowFlags instead.
+
+8. variable 'QdataStream’ has initializer but incomplete type   
+#include <QdataStream>   #include <Qiodevice>
+
+
+9.Qt5没有这个函数
+QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+
+10.
+#include <Q_INT64>    fatal error: Q_INT64: No such file or directory
+
+
+
+
+

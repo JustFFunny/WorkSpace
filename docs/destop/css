@@ -1,0 +1,33 @@
+-webkit-border-radius:10px;  
+-moz-border-radius:10px;  
+border-radius:10px; 
+height:0px;  
+width:0px;  
+border-width:20px;  
+border-style:solid;  
+border-color:green transparent transparent transparent; 
+
+
+//设置QtableVIew header
+
+
+this->tableView->horizontalHeader()->setStyleSheet("QHeaderView::section {background-color:darkcyan;"
+                                                       "color: black;padding-left: 4px;border: 1px solid #6c6c6c;}");
+
+
+this->tableView->verticalHeader()->setStyleSheet("QHeaderView::section {background-color:darkcyan;"
+                                                     "color: black;padding-left: 4px;border: 1px solid #6c6c6c;}");
+
+ 
+
+以下好看的样式来自于http://blog.csdn.net/zenwanxin/article/details/6524559
+
+tableView->horizontalHeader()->setStyleSheet
+
+("QHeaderView::section {background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,"
+
+"stop:0 #616161, stop: 0.5 yellow,stop: 0.6 green, stop:1 cyan);"
+"color: white;padding-left: 4px;border: 1px solid #6c6c6c;}"
+"QHeaderView::section:checked{background-color: red;}"
+"QHeaderView::down-arrow {image: url(down_arrow.png);}"
+"QHeaderView::up-arrow {image: url(up_arrow.png);}");/test/file/文件列表里的图标.png

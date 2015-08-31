@@ -1,0 +1,13 @@
+宏达 11:01:25 
+建议如下解决方案
+百度手机助手、应用宝之类的做法，ROM和sdcard分开来显示。没SD卡的直接显示为0,有实际SD卡的才显示容量大小 
+宏达 11:02:08 
+可参考如下方法：
+http://blog.csdn.net/gxj1680/article/details/8900270
+其它资料：
+http://bbs.gfan.com/android-5366738-1-1.html
+http://tieba.baidu.com/p/2003129162?see_lz=1
+ 
+宏达 11:02:23 
+另我这有个miroSD卡 你可以试验一下 
+

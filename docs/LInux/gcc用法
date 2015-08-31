@@ -1,0 +1,190 @@
+
+简单的使用 ：
+gcc factory.c -0 factory 
+
+执行     factory
+
+
+
+
+
+
+
+
+
+
+1  gcc包含的c/c++编译器
+gcc,cc,c++,g++,gcc和cc是一样的，c++和g++是一样的，(没有看太明白前面这半句是什么意思:))一般c程序就用gcc编译，c++程序就用g++编译
+
+2  gcc的基本用法
+gcc test.c这样将编译出一个名为a.out的程序
+gcc test.c -o test这样将编译出一个名为test的程序，-o参数用来指定生成程序的名字
+
+3  为什么会出现undefined reference to 'xxxxx'错误？
+首先这是链接错误，不是编译错误，也就是说如果只有这个错误，说明你的程序源码本身没有问题，是你用编译器编译时参数用得不对，你没有指定链接程序要用到得库，比如你的程序里用到了一些数学函数，那么你就要在编译参数里指定程序要链接数学库，方法是在编译命令行里加入-lm。
+
+4  -l参数和-L参数
+-l参数就是用来指定程序要链接的库，-l参数紧接着就是库名，那么库名跟真正的库文件名有什么关系呢？
+就拿数学库来说，他的库名是m，他的库文件名是libm.so，很容易看出，把库文件名的头lib和尾.so去掉就是库名了。好了现在我们知道怎么得到库名了，比如我们自已要用到一个第三方提供的库名字叫libtest.so，那么我们只要把libtest.so拷贝到/usr/lib里，编译时加上-ltest参数，我们就能用上libtest.so库了（当然要用libtest.so库里的函数，我们还需要与libtest.so配套的头文件）。
+
+放在/lib和/usr/lib和/usr/local/lib里的库直接用-l参数就能链接了，但如果库文件没放在这三个目录里，而是放在其他目录里，这时我们只用-l参数的话，链接还是会出错，出错信息大概是：“/usr/bin/ld: cannot find -lxxx”，也就是链接程序ld在那3个目录里找不到libxxx.so，这时另外一个参数-L就派上用场了，比如常用的X11的库，它放在/usr/X11R6/lib目录下，我们编译时就要用-L/usr/X11R6/lib -lX11参数，-L参数跟着的是库文件所在的目录名。再比如我们把libtest.so放在/aaa/bbb/ccc目录下，那链接参数就是-L/aaa/bbb/ccc -ltest   另外，大部分libxxxx.so只是一个链接，以RH9为例，比如libm.so它链接到/lib/libm.so.x，/lib/libm.so.6又链接到/lib/libm-2.3.2.so，
+
+如果没有这样的链接，还是会出错，因为ld只会找libxxxx.so，所以如果你要用到xxxx库，而只有libxxxx.so.x或者libxxxx-x.x.x.so，做一个链接就可以了ln -s libxxxx-x.x.x.so libxxxx.so
+
+手工来写链接参数总是很麻烦的，还好很多库开发包提供了生成链接参数的程序，名字一般叫xxxx-config，一般放在/usr/bin目录下，比如gtk1.2的链接参数生成程序是gtk-config，执行gtk-config --libs就能得到以下输出"-L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm"，这就是编译一个gtk1.2程序所需的gtk链接参数，xxx-config除了--libs参数外还有一个参数是--cflags用来生成头文件包含目录的，也就是-I参数，在下面我们将会讲到。你可以试试执行gtk-config --libs --cflags，看看输出结果。
+现在的问题就是怎样用这些输出结果了，最笨的方法就是复制粘贴或者照抄，聪明的办法是在编译命令行里加入这个`xxxx-config --libs --cflags`，比如编译一个gtk程序：gcc gtktest.c `gtk-config --libs --cflags`这样就差不多了。注意`不是单引号，而是1键左边那个键。
+
+除了xxx-config以外，现在新的开发包一般都用pkg-config来生成链接参数，使用方法跟xxx-config类似，但xxx-config是针对特定的开发包，但pkg-config包含很多开发包的链接参数的生成，用pkg-config --list-all命令可以列出所支持的所有开发包，pkg-config的用法就是pkg-config pagName --libs --cflags，其中pagName是包名，是pkg-config--list-all里列出名单中的一个，比如gtk1.2的名字就是gtk+，pkg-config gtk+ --libs --cflags的作用跟gtk-config --libs --cflags是一样的。比如：gcc gtktest.c `pkg-config gtk+ --libs --cflags`。
+
+5。-include和-I参数
+-include用来包含头文件，但一般情况下包含头文件都在源码里用#include xxxxxx实现，-include参数很少用。-I参数是用来指定头文件目录，/usr/include目录一般是不用指定的，gcc知道去那里找，但是如果头文件不在/usr/i
+nclude里我们就要用-I参数指定了，比如头文件放在/myinclude目录里，那编译命令行就要加上-I/myinclude参数了，如果不加你会得到一个"xxxx.h: No such file or directory"的错误。-I参数可以用相对路径，比如头文件在当前目录，可以用-I.来指定。上面我们提到的--cflags参数就是用来生成-I参数的。
+
+6。-O参数
+这是一个程序优化参数，一般用-O2就是，用来优化程序用的，比如gcc test.c -O2，优化得到的程序比没优化的要小，执行速度可能也有所提高（我没有测试过）。
+
+7。-shared参数
+编译动态库时要用到，比如gcc -shared test.c -o libtest.so
+
+8。几个相关的环境变量
+PKG_CONFIG_PATH：用来指定pkg-config用到的pc文件的路径，默认是/usr/lib/pkgconfig，pc文件是文本文件，扩展名是.pc，里面定义开发包的安装路径，Libs参数和Cflags参数等等。
+CC：用来指定c编译器。
+CXX：用来指定cxx编译器。
+LIBS：跟上面的--libs作用差不多。
+CFLAGS:跟上面的--cflags作用差不多。
+CC，CXX，LIBS，CFLAGS手动编译时一般用不上，在做configure时有时用到，一般情况下不用管。
+环境变量设定方法：export ENV_NAME=xxxxxxxxxxxxxxxxx
+
+9。关于交叉编译
+交叉编译通俗地讲就是在一种平台上编译出能运行在体系结构不同的另一种平台上，比如在我们地PC平台(X86 CPU)上编译出能运行在sparc CPU平台上的程序，编译得到的程序在X86 CPU平台上是不能运行的，必须放到sparc CPU平台上才能运行。当然两个平台用的都是linux。
+
+这种方法在异平台移植和嵌入式开发时用得非常普遍。相对与交叉编译，我们平常做的编译就叫本地编译，也就是在当前平台编译，编译得到的程序也是在本地执行。
+
+用来编译这种程序的编译器就叫交叉编译器，相对来说，用来做本地编译的就叫本地编译器，一般用的都是gcc，但这种gcc跟本地的gcc编译器是不一样的，需要在编译gcc时用特定的configure参数才能得到支持交叉编译的gcc。
+
+为了不跟本地编译器混淆，交叉编译器的名字一般都有前缀，比如sparc-xxxx-linux-gnu-gcc，sparc-xxxx-linux-gnu-g++ 等等
+
+10。交叉编译器的使用方法
+使用方法跟本地的gcc差不多，但有一点特殊的是：必须用-L和-I参数指定编译器用sparc系统的库和头文件，不能用本地(X86)的库（头文件有时可以用本地的）。
+例子：
+sparc-xxxx-linux-gnu-gcc test.c -L/path/to/sparcLib -I/path/to/sparcInclude
+
+Linux GCC解析及应用
+1 简介
+
+GCC 的意思也只是 GNU C Compiler 而已。经过了这么多年的发展，GCC 已经不仅仅能支持 C 语言；它现在还支持 Ada 语言、C++ 语言、Java 语言、Objective C 语言、Pascal 语言、COBOL语言，以及支持函数式编程和逻辑编程的 Mercury 语言，等等。而 GCC 也不再单只是 GNU C 语言编译器的意思了，而是变成了 GNU Compiler Collection 也即是 GNU 编译器家族的意思了。另一方面，说到 GCC 对于操作系统平台及硬件平台支持，概括起来就是一句话：无所不在。
+2 简单编译
+
+示例程序如下：
+
+//test.c
+#include <stdio.h>
+int main(void)
+{
+    printf("Hello World!\n");
+    return 0;
+}
+
+这个程序，一步到位的编译指令是:
+
+gcc test.c -o test
+
+实质上，上述编译过程是分为四个阶段进行的，即预处理(也称预编译，Preprocessing)、编译(Compilation)、汇编 (Assembly)和连接(Linking)。
+2.1 预处理
+
+gcc -E test.c -o test.i 或 gcc -E test.c
+
+可以输出test.i文件中存放着test.c经预处理之后的代码。打开test.i文件，看一看，就明白了。后面那条指令，是直接在命令行窗口中输出预处理后的代码.
+
+gcc的-E选项，可以让编译器在预处理后停止，并输出预处理结果。在本例中，预处理结果就是将stdio.h 文件中的内容插入到test.c中了。
+2.2 编译为汇编代码(Compilation)
+
+预处理之后，可直接对生成的test.i文件编译，生成汇编代码：
+
+gcc -S test.i -o test.s
+
+gcc的-S选项，表示在程序编译期间，在生成汇编代码后，停止，-o输出汇编代码文件。
+2.3 汇编(Assembly)
+
+对于上一小节中生成的汇编代码文件test.s，gas汇编器负责将其编译为目标文件，如下：
+
+gcc -c test.s -o test.o
+
+2.4 连接(Linking)
+
+gcc连接器是gas提供的，负责将程序的目标文件与所需的所有附加的目标文件连接起来，最终生成可执行文件。附加的目标文件包括静态连接库和动态连接库。
+
+对于上一小节中生成的test.o，将其与Ｃ标准输入输出库进行连接，最终生成程序test
+
+gcc test.o -o test
+
+在命令行窗口中，执行./test, 让它说HelloWorld吧！
+3多个程序文件的编译
+
+通常整个程序是由多个源文件组成的，相应地也就形成了多个编译单元，使用GCC能够很好地管理这些编译单元。假设有一个由test1.c和 test2.c两个源文件组成的程序，为了对它们进行编译，并最终生成可执行程序test，可以使用下面这条命令：
+
+gcc test1.c test2.c -o test
+
+如果同时处理的文件不止一个，GCC仍然会按照预处理、编译和链接的过程依次进行。如果深究起来，上面这条命令大致相当于依次执行如下三条命令：
+
+gcc -c test1.c -o test1.o
+gcc -c test2.c -o test2.o
+gcc test1.o test2.o -o test
+
+4 检错
+
+gcc -pedantic illcode.c -o illcode
+
+-pedantic编译选项并不能保证被编译程序与ANSI/ISO C标准的完全兼容，它仅仅只能用来帮助Linux程序员离这个目标越来越近。或者换句话说，-pedantic选项能够帮助程序员发现一些不符合 ANSI/ISO C标准的代码，但不是全部，事实上只有ANSI/ISO C语言标准中要求进行编译器诊断的那些情况，才有可能被GCC发现并提出警告。
+
+除了-pedantic之外，GCC还有一些其它编译选项也能够产生有用的警告信息。这些选项大多以-W开头，其中最有价值的当数-Wall了，使用它能够使GCC产生尽可能多的警告信息。
+
+gcc -Wall illcode.c -o illcode
+
+GCC给出的警告信息虽然从严格意义上说不能算作错误，但却很可能成为错误的栖身之所。一个优秀的Linux程序员应该尽量避免产生警告信息，使自己的代 码始终保持标准、健壮的特性。所以将警告信息当成编码错误来对待，是一种值得赞扬的行为！所以，在编译程序时带上-Werror选项，那么GCC会在所有 产生警告的地方停止编译，迫使程序员对自己的代码进行修改，如下：
+
+gcc -Werror test.c -o test
+
+5 库文件连接
+
+开发软件时，完全不使用第三方函数库的情况是比较少见的，通常来讲都需要借助许多函数库的支持才能够完成相应的功能。从程序员的角度看，函数库实际 上就是一些头文件（.h）和库文件（so、或lib、dll）的集合。。虽然Linux下的大多数函数都默认将头文件放到/usr/include/目录 下，而库文件则放到/usr/lib/目录下；Windows所使用的库文件主要放在Visual Stido的目录下的include和lib，以及系统文件夹下。但也有的时候，我们要用的库不再这些目录下，所以GCC在编译时必须用自己的办法来查找 所需要的头文件和库文件。
+
+例如我们的程序test.c是在linux上使用c连接mysql，这个时候我们需要去mysql官网下载MySQL Connectors的C库，下载下来解压之后，有一个include文件夹，里面包含mysql connectors的头文件，还有一个lib文件夹，里面包含二进制so文件libmysqlclient.so， 其中inclulde文件夹的路径是/usr/dev/mysql/include,lib文件夹是/usr/dev/mysql/lib
+5.1 编译成可执行文件
+
+首先我们要进行编译test.c为目标文件，这个时候需要执行
+
+gcc –c –I /usr/dev/mysql/include test.c –o test.o
+
+5.2 链接
+
+最后我们把所有目标文件链接成可执行文件:
+
+gcc –L /usr/dev/mysql/lib –lmysqlclient test.o –o test
+
+Linux下的库文件分为两大类分别是动态链接库（通常以.so结尾）和静态链接库（通常以.a结尾），二者的区别仅在于程序执行时所需的代码是在运行时动态加载的，还是在编译时静态加载的。
+5.3 强制链接时使用静态链接库
+
+默认情况下， GCC在链接时优先使用动态链接库，只有当动态链接库不存在时才考虑使用静态链接库，如果需要的话可以在编译时加上-static选项，强制使用静态链接库。
+
+在/usr/dev/mysql/lib目录下有链接时所需要的库文件libmysqlclient.so和libmysqlclient.a，为了让GCC在链接时只用到静态链接库，可以使用下面的命令:
+
+gcc –L /usr/dev/mysql/lib –static –lmysqlclient test.o –o tes
+
+静态库链接时搜索路径顺序：
+
+1. ld会去找GCC命令中的参数-L
+2. 再找gcc的环境变量LIBRARY_PATH
+3. 再找内定目录 /lib /usr/lib /usr/local/lib 这是当初compile gcc时写在程序内的
+
+动态链接时、执行时搜索路径顺序:
+
+1. 编译目标代码时指定的动态库搜索路径
+2. 环境变量LD_LIBRARY_PATH指定的动态库搜索路径
+3. 配置文件/etc/ld.so.conf中指定的动态库搜索路径
+4. 默认的动态库搜索路径/lib
+5. 默认的动态库搜索路径/usr/lib
+
+有关环境变量：
+LIBRARY_PATH环境变量：指定程序静态链接库文件搜索路径
+LD_LIBRARY_PATH环境变量：指定程序动态链接库文件搜索路径

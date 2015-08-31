@@ -1,0 +1,3 @@
+clearn :
+	-rm  a.bat  
+	

@@ -1,0 +1,114 @@
+二、编码知识科普
+Qt常见的两种编码是:UTF-8和GBK
+★UTF-8：Unicode TransformationFormat-8bit，允许含BOM，但通常不含BOM。是用以解决国际上字符的一种多字节编码，它对英文使用8位（即一个字节），中文使用24为（三个字节）来编码。UTF-8包含全世界所有国家需要用到的字符，是国际编码，通用性强。UTF-8编码的文字可以在各国支持UTF8字符集的浏览器上显示。如，如果是UTF8编码，则在外国人的英文IE上也能显示中文，他们无需下载IE的中文语言支持包。
+★GBK是国家标准GB2312基础上扩容后兼容GB2312的标准。GBK的文字编码是用双字节来表示的，即不论中、英文字符均使用双字节来表示，为了区分中文，将其最高位都设定成1。GBK包含全部中文字符，是国家编码，通用性比UTF8差，不过UTF8占用的数据库比GBD大。GBK是GB2312的扩展，除了兼容GB2312外，它还能显示繁体中文，还有日文的假名。
+★GBK、GB2312等与UTF8之间都必须通过Unicode编码才能相互转换：
+GBK、GB2312－－Unicode－－UTF8
+UTF8－－Unicode－－GBK、GB2312 
+★在简体中文windows系统下，ANSI编码代表GBK/GB2312编码，ANSI通常使用0x80~0xFF范围的2个字节来表示1个中文字符。0x00~0x7F之间的字符，依旧是1个字节代表1个字符。Unicode(UTF-16)编码则所有字符都用2个字节表示。
+
+
+三、编码转换
+UTF-8与ANSI(即GBK)的互转,可以使用EditPlus工具"文件另存为"或者Encodersoft编码转换工具对.cpp和.h源文件文本进行批量转换.
+
+
+四、Qt编码指定
+Qt需要在main()函数指定使用的字符编码:
+
+#include <QTextCodec>
+
+QTextCodec *codec = QTextCodec::codecForName("GBK");//情况1
+
+QTextCodec::setCodecForTr(codec);
+QTextCodec::setCodecForLocale(codec);
+QTextCodec::setCodecForCStrings(codec);
+
+或
+
+QTextCodec *codec = QTextCodec::codecForName("UTF-8");//情况2
+QTextCodec::setCodecForTr(codec);
+QTextCodec::setCodecForLocale(codec);
+QTextCodec::setCodecForCStrings(codec);
+
+这里只列举大家最常用的3个编译器(微软VS的中的cl，Mingw中的g++，Linux下的g++)，源代码分别采用GBK和无BOM的UTF-8以及有BOM的UTF-8这3种编码进行保存,发生的现象如下表所示。
+
+    源代码的编码
+    	
+
+    编译器
+    	
+
+    显示正常
+    	显示乱码
+
+    GBK
+    	
+
+    win vs cl
+    	
+
+    情况1
+    	
+
+    情况2
+
+    win mingw-g++
+    	
+
+    情况1
+    	
+
+    情况2
+
+    linux g++
+    	
+
+    情况1
+    	情况2
+
+    UTF-8(无BOM)
+    	
+
+    win vs cl
+    	
+
+    编译失败
+
+    error C2001: 常量中有换行符
+    	编译失败
+    error C2001: 常量中有换行符
+
+    win mingw-g++
+    	
+
+    情况2
+    	情况1
+
+    linux g++
+    	
+
+    情况2
+    	
+
+    情况1
+
+    UTF-8(有BOM)
+    	
+
+    win vs cl
+    	
+
+    情况1
+    	情况2
+
+    win mingw-g++
+    	
+
+    情况2
+    	情况1
+
+    linux g++
+    	
+
+    情况2
+    	情况1

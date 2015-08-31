@@ -1,0 +1,58 @@
+    1.由于html的特性，会导致一些特殊字符不能显示，例如用于标记的‘<’‘>’、空格，换行等。所以第一步需要对待添加的QString进行转化，转化成html支持的文本方式。使用如下函数：
+
+    void stringToHtmlFilter(QString &str)
+
+   {
+
+   //注意这几行代码的顺序不能乱，否则会造成多次替换
+
+   str.replace("&","&amp;");     
+
+   str.replace(">","&gt;");
+
+   str.replace("<","&lt;");
+
+   str.replace("\"","&quot;");
+
+   str.replace("\'","&#39;");
+
+   str.replace(" ","&nbsp;");
+
+   str.replace("\n","<br>");
+
+   str.replace("\r","<br>");
+
+    }
+
+
+//字体设置  QTextEdit设置字体以后,重新恢复到默认字体大小.
+
+方法1. 不起作用.
++//    QTextCursor cursor = _textedit->textCursor();
++//    QTextCharFormat textCharFormat;
++//    textCharFormat.setFontPointSize(13.0);
++//    QFont font;
++//    font.setBold(true);
++//    textCharFormat.setFont(font);
++//    cursor.setCharFormat(textCharFormat);
+
+方法2:
+ setStyleSheet();
+http://www.fising.cn/docs/AS3_Reference/flash/text/StyleSheet.html
+CSS 属性	ActionScript 属性	用法和支持的值
+color 	color 	只支持十六进制颜色值。不支持具有指定名称的颜色（例如 blue）。颜色以下面的格式写入：#FF0000。
+display 	display 	受支持的值为 inline、block 和 none。
+font-family 	fontFamily 	用逗号分隔的供使用字体的列表，根据需要按降序排列。可以使用任何字体系列名称。如果您指定通用字体名称，它将转换为相应的设备字体。支持以下字体转换：mono 转换为 _typewriter，sans-serif 转换为 _sans，serif 转换为 _serif。
+font-size 	fontSize 	只使用该值的数字部分。不分析单位（px、pt）；像素和磅是等价的。
+font-style 	fontStyle 	可识别的值为 normal 和 italic。
+font-weight 	fontWeight 	可识别的值为 normal 和 bold。
+kerning 	kerning 	可识别的值为 true 和 false。仅对嵌入字体支持字距调整。某些字体（如 Courier New）不支持字距调整。只有 Windows 中创建的 SWF 文件支持 kerning 属性，而 Macintosh 中创建的 SWF 文件不支持该属性。但是，这些 SWF 文件可以在 Flash Player 的非 Windows 版本中播放，并且仍可以应用字距调整。
+leading 	leading 	两行之间统一分布的距离。该值指定在每行之后添加的像素数。负值将压缩两行之间的距离。只使用该值的数字部分。不分析单位（px、pt）；像素和磅是等价的。
+letter-spacing 	letterSpacing 	两个字符之间统一分布的距离。该值指定在每个字符之后添加的像素数。负值将压缩两个字符之间的距离。只使用该值的数字部分。不分析单位（px、pt）；像素和磅是等价的。
+margin-left 	marginLeft 	只使用该值的数字部分。不分析单位（px、pt）；像素和磅是等价的。
+margin-right 	marginRight 	只使用该值的数字部分。不分析单位（px、pt）；像素和磅是等价的。
+text-align 	textAlign 	可识别的值为 left、center、right 和 justify。
+text-decoration 	textDecoration 	可识别的值为 none 和 underline。
+text-indent 	textIndent 	只使用该值的数字部分。不分析单位（px、pt）；像素和磅是等价的。 
+
+

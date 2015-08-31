@@ -1,0 +1,103 @@
+
+2、打开本地文件（夹）、可执行程序等
+
+  QString local_path = QString("E:/新建文件夹"); //a.txt、a.exe、a.mp3、a.mp4、a.rmvb等
+
+  QString path = QString("file:///") + local_path;
+  bool is_open = QDesktopServices::openUrl(QUrl(path, QUrl::TolerantMode));
+
+
+3.ldd 可执行程序      ：可以查看可执行程序依赖的库
+
+
+echo 123456 | sudo -S  /usr/sbin/adb pull /system/app/AnalogClock.apk  /AnalogClock.apk
+                                          source        target
+
+
+1、查看文件大小：
+    #du -sh filename
+2、查看文件,文件夹属性：
+   #ls -l filename
+   #ls -ld foldername
+3、查看文件的三个时间 atime ,ctime, mtime
+  3.1、 mtime(modification time),修改时间: 这个时间指的是文件内容修改的时间，而不是文件属性的修改，当数据内容修改时，这个时间就会改变，用命令ls -l默认显示的就是这个时间
+   3.2、ctime(status time ),状态时间：当一个文件的状态改变时，这个时间就会改变，例如更改了文件的权限与属性等，它就会改变。
+   3.3、atime(access time),访问时间:当读取文件内容时，就会更改这个时间，例如使用cat 去读取/etc/man.config,那么该文件的atime就会改变。
+   3.4、查看命令：
+         # ls -l --full-time /etc/man.config                           mtime
+
+        # ls -l --time=atime --full-time /etc/man.config       atime
+
+        # ls -l --time=ctime --full-time /etc/man.config       ctime
+4、其他
+      如果要一起查看文件的三个时间情况，可以用命令stat进行查看
+       # stat /etc/man.config
+
+5
+
+
+# grep ‘energywise’ *           #在当前目录搜索带'energywise'行的文件
+
+# grep -r ‘energywise’ *        #在当前目录及其子目录下搜索'energywise'行的文件
+
+# grep -l -r ‘energywise’ *     #在当前目录及其子目录下搜索'energywise'行的文件，但是不显示匹配的行，只显示匹配的文件
+
+
+
+函数mapToSourcde()负责返回对应源数据项的索引。
+
+谁说不能执行shell？方法不对而已。 (Ubuntu 12.04)
+C/C++ code	
+void MainWindow::on_pushButton_clicked()
+{
+    QStringList options;
+    options << "-c" << "cd / && ls -l > ~/Desktop/a.txt";
+    QProcess* process = new QProcess(this);
+    process->start("/bin/sh", options);
+}
+
+
+netstat -tnlp |grep 端口号，如果开启的是listen状态，如果没有开启，就没有任何显示 
+
+
+
+apt-get 缓存文件的路径,还有一点就是这缓存路径是定时清空的.
+ 路径:   /var/cache/apt/archives/
+
+
+/********************************
+//Question:   linux下查看一个是否安装?
+************************************/
+因为linux安装软件的方式比较多，所以没有一个通用的办法能查到某些软件是否安装了。总结起来就是这样几类：
+
+1、rpm包安装的，可以用rpm -qa看到，如果要查找某软件包是否安装，用 rpm -qa | grep “软件或者包的名字”。
+[root@hexuweb102 ~] rpm -qa | grep ruby
+1
+	
+[root@hexuweb102 ~] rpm -qa | grep ruby
+
+2、以deb包安装的，可以用dpkg -l能看到。如果是查找指定软件包，用dpkg -l | grep “软件或者包的名字”；
+[root@hexuweb102 ~] dpkg -l | grep ruby
+1
+	
+[root@hexuweb102 ~] dpkg -l | grep ruby
+
+3、yum方法安装的，可以用yum list installed查找，如果是查找指定包，命令后加 | grep “软件名或者包名”；
+[root@hexuweb102 ~] yum list installed | grep ruby
+1
+	
+[root@hexuweb102 ~] yum list installed | grep ruby
+
+4、如果是以源码包自己编译安装的，例如.tar.gz或者tar.bz2形式的，这个只能看可执行文件是否存在了，
+
+上面两种方法都看不到这种源码形式安装的包。如果是以root用户安装的，可执行程序通常都在/sbin:/usr/bin目录下。
+
+说明：
+其中rpm yum Redhat系linux的软件包管理命令，dpkg debian系列的软件包管理命令
+1
+	
+其中rpm yum Redhat系linux的软件包管理命令，dpkg debian系列的软件包管理命令
+
+
+
+  table_widget->horizontalHeader()->setStretchLastSection(true); //设置充满表宽度

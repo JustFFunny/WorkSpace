@@ -1,0 +1,99 @@
+sudo apt-get install libphonon-dev libphonon4 phonon-backend-gstreamer
+
+//time
+   QTime total_time(0, (total_time_value/60000)%60, (total_time_value/1000)%60);
+    QTime current_time(0, (time/60000)%60, (time/1000)%60);//传进来的time参数代表了当前的时间
+    QString str = current_time.toString("mm:ss") + "/" + total_time.toString("mm:ss");
+
+
+
+MPlayer参数介绍
+2 UNKNOWN (C) 2000-2012 MPlayer Team
+Usage:   mplayer [options] [url|path/]filename
+
+Basic options: (complete list in the man page)
+ -vo <drv>        select video output driver ('-vo help' for a list)
+ -ao <drv>        select audio output driver ('-ao help' for a list)
+ vcd://<trackno>  play (S)VCD (Super Video CD) track (raw device, no mount)
+ dvd://<titleno>  play DVD title from device instead of plain file
+ -alang/-slang    select DVD audio/subtitle language (by 2-char country code)
+ -ss <position>   seek to given (seconds or hh:mm:ss) position
+ -nosound         do not play sound
+ -fs              fullscreen playback (or -vm, -zoom, details in the man page)
+ -x <x> -y <y>    set display resolution (for use with -vm or -zoom)
+ -sub <file>      specify subtitle file to use (also see -subfps, -subdelay)
+ -playlist <file> specify playlist file
+ -vid x -aid y    select video (x) and audio (y) stream to play
+ -fps x -srate y  change video (x fps) and audio (y Hz) rate
+ -pp <quality>    enable postprocessing filter (details in the man page)
+ -framedrop       enable frame dropping (for slow machines)
+
+Basic keys: (complete list in the man page, also check input.conf)
+ <-  or  ->       seek backward/forward 10 seconds
+ down or up       seek backward/forward  1 minute
+ pgdown or pgup   seek backward/forward 10 minutes
+ < or >           step backward/forward in playlist
+ p or SPACE       pause movie (press any key to continue)
+ q or ESC         stop playing and quit program
+ + or -           adjust audio delay by +/- 0.1 second
+ o                cycle OSD mode:  none / seekbar / seekbar + timer
+ * or /           increase or decrease PCM volume
+ x or z           adjust subtitle delay by +/- 0.1 second
+ r or t           adjust subtitle position up/down, also see -vf expand
+ double click     toggle fullscreen
+ right click      pause (press again to continue)
+
+ * * * SEE THE MAN PAGE FOR DETAILS, FURTHER (ADVANCED) OPTIONS AND KEYS * * *
+
+
+volume 100 1 
+volume 10 1
+get_time_length
+ANS_LENGTH=664.73
+get_time_pos
+ANS_TIME_POSITION=124.2
+
+
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include <QWidget>
+#include <QProcess>
+#include <QString>
+#include <QStringList>
+
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+    //    playform->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
+    //    playform->setAttribute(Qt::WA_OpaquePaintEvent);
+    //    playform->move(110,100);
+    //    playform->setMinimumSize(320,240);
+    playform = new QWidget(this);
+    connect(ui->pushButton,SIGNAL(clicked()),this,SLOT(result()));
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+void MainWindow::result()
+{
+    QProcess * process=new QProcess(this);
+    QStringList args;
+    args<<"- slave"<<" - quiet";
+    //args<<"-slave"<<"-quiet";
+    //让窗口依附于
+    args<<"- wid"<<QString::number(this->playform->winId());
+    args<<"/home/wuqiankun/桌面/fire.mp3";
+    process->setProcessChannelMode(QProcess::MergedChannels);
+    process->start("/home/wuqiankun/mplayer",args);
+}
+
+//定时器超时推出
+QTimer::singleShot(10000, loop, SLOT(quit())); 
+
+
+
+

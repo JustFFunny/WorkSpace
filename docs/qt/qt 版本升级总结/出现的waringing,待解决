@@ -1,0 +1,57 @@
+1.libpng warning: iCCP: known incorrect sRGB profile   
+出现问题的地方:
+ label_2->setPixmap(QPixmap(QString::fromUtf8(":/icons/nfs_logo.png")));
+
+
+
+//网址     http://www.tuicool.com/articles/j22Yvef
+cocos2dx游戏在运行的时候总是出现这个警告。因为不会对实际游戏造成影响，
+所以就一直没有管。今天稍微google了下，原来是新版本的libpng(1.6.2之后)对png图片的检查更加严格了，所以会有这个warning。
+
+解决方法：
+
+1.1、直接改libpng的代码，这个其实很安逸，自己重新编译一下libpng的库就好了。虽然稍微麻烦了一点点，但是一点都不困难，而且一劳永逸。
+
+而且就代码来说，除非导致png图片显示异常或者跨平台出现问题，否则都不应该莫名其妙的出现不必要的警告。
+
+1.2使用ImageMagick转换png图片。在 这里 下载ImageMagick。然后写个脚本转换所有png图片。
+
+import os
+
+CMD = r'D:\Program Files\ImageMagick-6.9.0-Q16\convert.exe'
+SOURCE_PATH = r'E:\Code\res'
+
+def doStrip(path):
+  data = {};
+  print(path)
+  for root, dirs, files in os.walk(path):
+    for file in files:
+      name = file.lower();
+      if name.find('.png') != -1:
+        path = os.path.join(root, file)
+        os.system('"{0}" {1} -strip {1}'.format(CMD, path, path));
+
+
+doStrip(SOURCE_PATH)
+
+
+
+
+libpng 对GIMP生成的png报错
+libpng warning: i: known incorrect sRGB profile
+原因是新版的libpng增强了检查，发出警告。此警告可以忽略。
+
+2.QEasingCurve: Invalid tcb curve
+
+
+出现问题的地方:createCurveIcons()函数Setting,应该是设置的数据超过范围.  0.1 ~1.0之间. QSetting类中
+
+
+
+3.QVariantAnimation::setDuration: cannot set a negative duration
+   animation.setTargetObject(current);在animation.cpp 38 39行
+4.QEasingCurve: Invalid curve type -1607299034  在animation.cpp 74 75行
+
+3.QIODevice::write (QProcess): device not open
+25行conthread.cpp第一次出现
+ QIODevice::read (QProcess): device not open

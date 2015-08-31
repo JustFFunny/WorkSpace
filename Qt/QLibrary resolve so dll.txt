@@ -1,0 +1,39 @@
+Qt 下 QLibrary 动态加载 dll是本文要介绍的内容，先来配置环境，测试平台：Windows XP Sp3 + Qt 4.5 + Compaq Visual Fortran Version 6.6。
+
+下了个Qt Creator功能挺强大的，测试一下QLibrary动态加载VS下编译的Fortran写的dll。在pushButton上建立click()信号的槽
+
+    #include "mainwindow.h"  
+     
+    #include "ui_mainwindow.h"  
+     
+    #include <QLibrary> 
+     
+    #include <qtextcodec.h>        //解决中文显示所需的库  
+     
+    MainWindow::MainWindow(QWidget *parent)  
+    : QMainWindow(parent), ui(new Ui::MainWindowClass)  
+    {  
+    ui->setupUi(this);  
+    QTextCodec::setCodecForTr(QTextCodec::codecForLocale());   //设置中文显示，使用本地字库  
+    connect(ui->OKButton,SIGNAL(clicked()),this,SLOT(close()));     //将OKButton的Clicked（）信号帮定close（）槽  
+    }  
+    MainWindow::~MainWindow()  
+    {  
+    delete ui;  
+    }  
+    void MainWindow::on_OKButton_2_clicked()        //OKButton_2的槽  
+    {  
+    ui->label->setText(QApplication::translate("MainWindowClass", "aaa", 0,QApplication::UnicodeUTF8 ));    //另一种文本转换方法，不知有啥优点...  
+    int a=1,b=2,c=6;  
+    typedef void (*myfun)(int,int,int *);       // 定义导出函数类型  
+    QLibrary hdll( "test01.dll" );        //加载dll，当前目录  
+    if(hdll.load())  
+    {  
+    myfun fun1 = (myfun)hdll.resolve("MYSUB");        //用resolve来解析fun1函数  
+    if ( fun1 )       //解析成功则进行运算并提示相关信息  
+    {  
+    fun1(a,b,&c);  
+    QString qss=tr("dll加载成功！\n 1+2=")+QString::number(c,10);  
+    ui->label->setText(qss);  
+    }  
+    }  

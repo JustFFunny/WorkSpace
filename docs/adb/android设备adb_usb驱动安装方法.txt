@@ -1,0 +1,17 @@
+1.打开电脑的管理-设备管理器，用USB链接android设备(android设备要打开USB调试)，应该可以看到带黄色问号的USB设备。
+2.在设备上右键查看属性-详细信息，在属性中选择硬件ID，此时可以看到硬件ID，例如：
+USB\VID_2207&PID_0010&REV_0222&MI_01
+USB\VID_2207&PID_0010&MI_01
+
+3.打开sdk\extras\google\usb_driver\android_winusb.inf，找到“Google Nexus Q”的信息:
+;Google Nexus Q
+%SingleBootLoaderInterface% = USB_Install, USB\VID_18D1&PID_2C10
+%SingleAdbInterface%        = USB_Install, USB\VID_18D1&PID_2C11
+
+复制一份，并修改如下，注意VID和PID要和硬件ID中的一致：
+;android
+%SingleBootLoaderInterface% = USB_Install, USB\VID_2207&PID_0010
+%SingleAdbInterface%        = USB_Install, USB\VID_2207&PID_0010&MI_01 
+
+注意：驱动分为32位和64位，需要在[Google.NTx86]和[Google.NTamd64]段，都添加一份，内容一样。
+

@@ -1,0 +1,235 @@
+/*原理：
+Qt中不规则窗体和部件的实现，不管是窗体还是部件，都是从QWidget派生而来的，
+所以它们的原理是一样的;
+都是设置部件的背景色或者按钮图标等为一个图像A，然后设置此部件的掩码为另一个图像B，这个图像B经过位与运算后，得到不规则的图像，这就行了下面，是一个简单的示例
+
+
+*/
+form.h:
+
+    引用
+
+    #ifndef  FORM_H
+    #define  FORM_H
+
+    #include <QtGui/QWidget>
+
+    class Form : public QWidget
+    {
+        Q_OBJECT
+    public:
+        Form();
+        ~Form();
+    };
+
+    #endif
+
+
+
+form.cpp:
+
+    引用
+
+    #include <QtGui/QPixmap>
+    #include <QtGui/QBitmap>
+    #include "toolbutton.h"
+    #include "form.h"
+
+    Form::Form()
+    {
+        QPalette p = palette();
+        QPixmap img("a.png");
+        QBitmap mask("mask.png");
+        p.setBrush(QPalette::Window, QBrush(img));
+        setPalette(p);
+        setMask(mask);
+        setWindowFlags(Qt::FramelessWindowHint);
+        resize(600, 400);
+       
+        ToolButton *button = new ToolButton(this);
+        button->move(200, 200);
+    }
+
+    Form::~Form()
+    {
+    }
+
+
+
+toolbutton.h:
+
+    引用
+
+    #ifndef  TOOLBUTTON_H
+    #define  TOOLBUTTON_H
+
+    #include <QtGui/QToolButton>
+
+    class ToolButton : public QToolButton
+    {
+        Q_OBJECT
+    public:
+        ToolButton(QWidget *parent=0);
+        ~ToolButton();
+    };
+
+    #endif
+
+
+
+toolbutton.cpp:
+
+    引用
+
+    #include <QtGui/QPixmap>
+    #include <QtGui/QBitmap>
+    #include "toolbutton.h"
+
+    ToolButton::ToolButton(QWidget *parent)
+        : QToolButton(parent)
+    {
+        /*
+        // 如果是非按钮类部件，则使用此段代码
+        QPalette p = palette();
+        p.setBrush(QPalette::Button, QBrush(QPixmap("toolbutton.png")));
+        setPalette(p);
+        /*/
+        // 如果是按钮类部件，则使用此段代码
+        setIcon(QIcon("toolbutton.png"));
+        setIconSize(QSize(48, 48));
+        //*********************************/
+        setMask(QBitmap("toolbutton_mask.png"));
+        setFixedSize(48, 48);
+    }
+
+    ToolButton::~ToolButton()
+    {
+    }
+
+
+
+main.cpp:
+
+    引用
+
+    #include <QtGui/QApplication>
+    #include "form.h"
+
+    int main(int argc, char **argv)
+    {
+        QApplication app(argc, argv);
+        Form form;
+        form.show();
+        return app.exec();
+    } 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+example 2:
+实现一个以图片边框为窗口边框的Qt程序，可以鼠标左键拖动，点击右键可以推出程序。
+
+本程序一共三个文件，分别为shapewidget.h，shapewidget.cpp，main.cpp
+
+自定义头文件：shapewidget.h
+
+#ifndef SHAPEWIDGET_H
+#define SHAPEWIDGET_H
+
+#include <QtGui>
+
+class QPoint;       //定义一个Qpoint类
+
+class ShapeWidget : public QWidget  //ShaoeWidget继承了QWidget
+{
+    Q_OBJECT
+public:
+    ShapeWidget(QWidget *parent=0);        //创建一个空内容的构造函数
+
+protected:
+    void mousePressEvent(QMouseEvent *);        //自定义一个鼠标点击事件函数
+    void mouseMoveEvent(QMouseEvent *);         //自定义一个鼠标拖动事件函数
+    void paintEvent(QPaintEvent *);             //自定义一个刷屏事件函数
+
+private:
+    QPoint dragPosition;        //定义一个QPoint的成员变量
+
+};
+
+#endif
+
+实现文件：shapewidget.cpp
+
+#include "shapewidget.h"
+
+ShapeWidget::ShapeWidget(QWidget *parent)   //外部重写构造函数
+        : QWidget(parent,Qt::FramelessWindowHint)   //初始化参数类型
+{
+    QPixmap pix;    //设置一个QPixmap的对象。
+    pix.load(":/images/Watermelon.png",0,Qt::AvoidDither|Qt::ThresholdDither|Qt::ThresholdAlphaDither);
+    resize(pix.size()); //设置窗口的尺寸为图片的尺寸
+    setMask(pix.mask());   //先通过pix的方法获得图片的过滤掉透明的部分得到的图片，作为shapeWidget的不规则边框。
+}
+
+void ShapeWidget::mousePressEvent(QMouseEvent * event)
+{
+    if (event->button() == Qt::LeftButton) //点击左边鼠标
+    {
+         dragPosition = event->globalPos() - frameGeometry().topLeft();
+         //globalPos()获取根窗口的相对路径，frameGeometry().topLeft()获取主窗口左上角的位置
+         event->accept();   //鼠标事件被系统接收
+    }
+    if (event->button() == Qt::RightButton)
+    {
+         close();
+    }
+}
+
+void ShapeWidget::mouseMoveEvent(QMouseEvent * event)
+{
+    if (event->buttons() == Qt::LeftButton) //当满足鼠标左键被点击时。
+    {
+         move(event->globalPos() - dragPosition);//移动窗口
+         event->accept();
+    }
+}
+
+void ShapeWidget::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);//创建一个QPainter对象
+    painter.drawPixmap(0,0,QPixmap(":/images/Watermelon.png"));//绘制图片到窗口
+    /*
+      QPixmap(":/images/Watermelon.png")如果改为QPixmap()，则只能看到绘制出的框架，看不到图片颜色，也就是看不到图片。
+    */
+}
+
+ 
+
+主函数：main.cpp
+
+ #include <QApplication>
+#include "shapewidget.h"
+
+int
+main(int argc, char * argv[])
+{
+    QApplication app(argc,argv);
+    ShapeWidget shape;
+    shape.show();
+    return app.exec();
+}

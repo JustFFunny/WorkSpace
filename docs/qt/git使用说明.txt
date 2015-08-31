@@ -1,0 +1,119 @@
+关于git的使用：
+
+用户名配置：
+git config --global user.name <your_name>
+例： $ git config --global user.name "Yang Yanlin"
+
+邮箱配置：
+git config --global user.email <your_email@…>
+例： $ git config --global user.email yanlin@nfs-china.com
+
+颜色配置：
+$ git config --global color.ui auto
+
+这时，就可以下载源码了：
+git clone gittree@192.168.8.78:/pub/gittrees/Lphone_pc.git -b develop       
+
+下载后会生成一个Lphone_pc，进入Lphone_pc目录后会发现有个 “.git”目录，存在“.git”目录说明该项目是通过git管理的。
+
+常用的git命令有：
+git pull // 同步
+git add  // 添加
+git commit -m “*****”   //添加标注message
+git push  //提交修改
+
+需要注意的是，修改源码前，请先git pull同步。
+
+下面是git命令的一些简单说明：
+
+对项目源码作了修改后，需要提交，这时的提交分为三种情况(***需要注意的是每次修改前先进行同步： git pull)：
+1） 单个新文件的提交：
+$  echo "test file"  >>  test
+这时，用git status命令查看：
+$ git status
+# On branch develop
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+# test
+nothing added to commit but untracked files present (use "git add" to track)
+可以看出这个test文件的状态是 “untracked files”
+向本地仓库添加这个文件：
+$  git add test
+这时再用git status命令查看，则可以看出test的状态是：“Changes to be committed”
+然后想本地仓库提交：
+$  git commit -m "add new file " 
+"add new file"
+[develop bbe823c] add new file
+1 files changed, 1 insertions(+), 0 deletions(-)
+create mode 100644 test
+
+上面的“add new file” 是一个说明信息，大家可以自己写，只要描述清楚这次提交是做什么就可以了。
+这时再使用git status命令查看，则可以看到：
+$ git status
+# On branch develop
+# Your branch is ahead of 'origin/develop' by 1 commit.
+#
+nothing to commit (working directory clean)
+说明test已经提交到本地仓库，已经没有新文件了。
+接下来，将test提送到远程仓库，这样别的成员就可以下载到你的修改了：
+$  git push
+这样单个文件的提交就完成了。可以看出一个完整的提交过程有一下步骤：
+1.添加到本地仓库： git add fielname
+2.提交到本地仓库： git commit -m "message"
+3.推送到远程仓库： git push
+期间，可以用 git status查看状态。
+
+2） 多个新文件的提交：
+如我在build目录下新建了一个目录，并创建了多个文件：
+$ mkdir  dir
+$ echo "file 1" >> dir/file1
+$ echo "file 2" >> dir/file2
+$ echo "file 3" >> dir/file3
+这时，要提交dir目录中的所有文件可以用下面的方法：
+$  git add dir
+$  git commit -m "add new dir"
+$  git push sl
+
+如果 要提交位于不同目录中的不同文件：
+如:
+假设有三个目录：BOOK CALL CTV
+$ echo "file 1" >> BOOK/file1
+$ echo "file 2" >> CALL/file2
+$ echo "file 3" >> CTV/file3
+则只有添加到本地仓库的步骤跟上面不一样：
+$  git add BOOK/file1
+$  git add CALL/file2
+$  git add  CTV/file3       //也可以直接 git * 添加所有文件
+$  git commit -m "add some new files"
+$  git push
+也就是说，提交多个文件的时候，需要把他们都添加到本地仓库，然后再提交。
+
+3） 旧文件修改后提交：
+如果修改了dir下面的 fiel1的内容：
+$ echo "adsfsdf" >> dir/file1
+这时要提交fiel1，有两个方法：
+$  git add dir/file1
+$  git commit -m "modify file1"
+$  git push sl
+或者：
+$  git commit -a -m "modify file1"
+$  git push sl
+从上面的例子可以看出，git commit -a -m "modify file1"中的-a选项就相当于 git add中的 add。不过在方法1中如果用
+git commit -a -m "modify file1"也没错啊。如果这个地方不懂的话，以后只要提交，都用git commit -a -m “message”就行了。
+如果修改了多个文件，提交的时候将多个文件分别添加到本地仓库，然后提交就可以了。
+
+如果有什么疑问的话，欢迎给我邮件 : yanlin@nfs-china.com
+谢谢！
+
+
+
+
+
+如果发生冲突的时候,解决方案:步骤如下;
+1.备份 冲突的文件 cp  ...  ......bak
+2.git checkout 冲突文件
+3.git pull 更新文件  (此时未冲突文件更新到最新,冲突文件未更新)
+4.安装软件meld(文件对比工具),解决冲突;meld  ...      ...bak 
+5.ok
+

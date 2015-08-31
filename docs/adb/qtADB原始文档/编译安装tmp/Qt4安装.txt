@@ -1,0 +1,59 @@
+推荐出处：
+http://blog.sina.com.cn/s/blog_7745fc8601013xq4.html
+
+http://club.topsage.com/thread-444046-1-1.html
+
+
+
+
+
+E: 软件包 libqt4-debug 没有可供安装的候选者
+byhongda@AlexZone-linux:~$ sudo apt-get install libqt4-dev libqt4-dbg libqt4-gui libqt4-sql qt4-dev-tools qt4-doc qt4-designer qt4-qtconfig
+正在读取软件包列表... 完成
+正在分析软件包的依赖关系树       
+正在读取状态信息... 完成       
+libqt4-dev 已经是最新的版本了。
+libqt4-dev 被设置为手动安装。
+libqt4-sql 已经是最新的版本了。
+libqt4-sql 被设置为手动安装。
+建议安装的软件包：
+  qt4-doc-html
+下列【新】软件包将被安装：
+  libqt4-dbg libqt4-gui qt4-designer qt4-dev-tools qt4-doc qt4-qtconfig
+升级了 0 个软件包，新安装了 6 个软件包，要卸载 0 个软件包，有 0 个软件包未被升级。
+需要下载 160 MB/160 MB 的软件包。
+解压缩后会消耗掉 386 MB 的额外空间。
+您希望继续执行吗？[Y/n]y
+
+
+
+
+
+
+
+byhongda@AlexZone-linux:~$ sudo apt-get install qtcreator
+正在读取软件包列表... 完成
+正在分析软件包的依赖关系树       
+正在读取状态信息... 完成       
+将会安装下列额外的软件包：
+  libqt4-declarative-gestures libqt4-declarative-particles qt4-demos qt4-qmlviewer qtcreator-doc
+建议安装的软件包：
+  cmake kdelibs5-data subversion
+下列【新】软件包将被安装：
+  libqt4-declarative-gestures libqt4-declarative-particles qt4-demos qt4-qmlviewer qtcreator qtcreator-doc
+升级了 0 个软件包，新安装了 6 个软件包，要卸载 0 个软件包，有 0 个软件包未被升级。
+需要下载 28.8 MB 的软件包。
+解压缩后会消耗掉 92.9 MB 的额外空间。
+您希望继续执行吗？[Y/n]y
+
+
+byhongda@AlexZone-linux:~$ git clone https://bitbucket.org/michalmotyczko/qtadb.git ~/qtadbcode2
+Cloning into '/home/byhongda/qtadbcode2'...
+remote: Counting objects: 184, done.
+remote: Compressing objects: 100% (115/115), done.
+remote: Total 184 (delta 69), reused 184 (delta 69)
+Receiving objects: 100% (184/184), 938.61 KiB | 316 KiB/s, done.
+Resolving deltas: 100% (69/69), done.
+
+
+

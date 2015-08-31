@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>1.png</file>
+        <file>2.png</file>
+        <file>style.html</file>
+        <file>ali.gif</file>
+        <file>smail.png</file>
+        <file>style.html</file>
+    </qresource>
+</RCC>

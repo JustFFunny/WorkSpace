@@ -1,0 +1,113 @@
+QWidget及其子类都可有右键菜单，因为QWidget有以下两个与右键菜单有关的函数：
+
+Qt::ContextMenuPolicy contextMenuPolicy () const
+
+void setContextMenuPolicy ( Qt::ContextMenuPolicy policy )
+
+Qt::ContextMenuPolicy枚举类型包括：Qt::DefaultContextMenu, Qt::NoContextMenu, Qt::PreventContextMenu, Qt::ActionsContextMenu, and Qt::CustomContextMenu。
+
+使用方式如下：
+
+
+1）默认是Qt::DefaultContextMenu。
+它是利用右键菜单事件contextMenuEvent()来处理（which means the contextMenuEvent() handler is called)。就是要重写contextMenuEvent( QContextMenuEvent * event )函数。
+
+
+2）使用Qt::CustomContextMenu。
+它是发出QWidget::customContextMenuRequested信号，注意仅仅只是发信号，意味着要自己写显示右键菜单的slot。
+这个信号是QWidget唯一与右键菜单有关的信号（也是自有的唯一信号），同时也是很容易被忽略的signal：
+
+void customContextMenuRequested ( const QPoint & pos )
+
+该信号的发出条件是：用户请求contextMenu（常规就是鼠标右击啦）且同时被击的widget其contextMenuPolicy又是Qt::CustomContextMenu。
+注意：pos是该widget接收右键菜单事件的位置，一般是在该部件的坐标系中。但是对于QAbstratScrollArea及其子类例外，是对应着其视口viewport()的坐标系。如常用的QTableView、QHeaderView就是QAbstratScrollArea的子类。
+因为仅发信号，所以需自己写显示右键菜单的slot来响应，例如一个表格（QTableView类型）表头的显示右键菜单槽：
+datatable->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
+connect(datatable->horizontalHeader(), SIGNAL(customContextMenuRequested(const QPoint&)), 
+        this, SLOT(show_contextmenu(const QPoint&)));//this是datatable所在窗口
+QMenu *cmenu = NULL;
+show_contextmenu(const QPoint& pos)
+{
+    if(cmenu)//保证同时只存在一个menu，及时释放内存
+    {
+        delete cmenu;
+        cmenu = NULL;
+    }
+    QMenu cmenu = new QMenu(datatable->horizontalHeader());
+    
+    QAction *ascendSortAction = cmenu->addAction("升序");
+    QAction *descendSortAction = cmenu->addAction("降序");
+    QAction *filterAction = cmenu->addAction("过滤");
+    QAction *reshowAction = cmenu->addAction("重载");
+    
+    connect(ascendSortAction, SIGNAL(triggered(bool)), this, SLOT(sort_ascend()));
+    connect(descendSortAction, SIGNAL(triggered(bool)), this, SLOT(sort_descend()));
+    connect(filterAction, SIGNAL(triggered(bool)), this, SLOT(show_filter_dlg()));
+    connect(reshowAction, SIGNAL(triggered(bool)), this, SLOT(reshow_data()));
+    
+    cmenu->exec(QCursor::pos());//在当前鼠标位置显示
+    //cmenu->exec(pos)是在viewport显示
+}
+
+也可先做好cmenu，好处是始终使用一个：
+    QMenu cmenu = new QMenu(datatable->horizontalHeader());
+    
+    QAction *ascendSortAction = cmenu->addAction("升序");
+    QAction *descendSortAction = cmenu->addAction("降序");
+    QAction *filterAction = cmenu->addAction("过滤");
+    QAction *reshowAction = cmenu->addAction("重载");
+    
+    connect(ascendSortAction, SIGNAL(triggered(bool)), this, SLOT(sort_ascend()));
+    connect(descendSortAction, SIGNAL(triggered(bool)), this, SLOT(sort_descend()));
+    connect(filterAction, SIGNAL(triggered(bool)), this, SLOT(show_filter_dlg()));
+    connect(reshowAction, SIGNAL(triggered(bool)), this, SLOT(reshow_data()));
+show_contextmenu(const QPoint& pos)
+{
+    if(cmenu)
+    {
+        cmenu->exec(QCursor::pos());
+    }
+}
+
+
+3）使用Qt::ActionsContextMenu。
+把部件的所有action即QWidget::actions()作为context menu显示出来。
+还是上面的例子，要在表格（QTableView类型）表头显示右键菜单：
+        QAction *ascendSortAction = new QAction("升序", this);
+        QAction *descendSortAction = new QAction("降序", this);
+        QAction *filterAction = new QAction("过滤", this);
+        QAction *unfilterAction = new QAction("取消过滤", this);
+    
+        connect(ascendSortAction, SIGNAL(triggered(bool)), this, SLOT(sort_ascend()));
+        connect(descendSortAction, SIGNAL(triggered(bool)), this, SLOT(sort_descend()));
+        connect(filterAction, SIGNAL(triggered(bool)), this, SLOT(filter_table()));
+        connect(unfilterAction, SIGNAL(triggered(bool)), this, SLOT(unfilter_table()));
+    
+        datatable->horizontalHeader()->addAction(ascendSortAction);
+        datatable->horizontalHeader()->addAction(descendSortAction);
+        datatable->horizontalHeader()->addAction(filterAction);
+        datatable->horizontalHeader()->addAction(unfilterAction);
+         
+        datatable->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
+
+另外两个就是不显示context menu了：
+Qt::NoContextMenu
+    the widget does not feature a context menu, context menu handling is deferred to the widget's parent.
+    
+Qt::PreventContextMenu
+    the widget does not feature a context menu, and in contrast to NoContextMenu, the handling is not deferred to the widget's parent. This means that all right mouse button events are guaranteed to be delivered to the widget itself through mousePressEvent(), and mouseReleaseEvent().
+
+补充：
+    使用Qt::ActionsContextMenu比较简洁，但是如果需要根据当前菜单弹出的位置来定义不同菜单，或者像上个例子，在表格（QTableView类型）表头显示右键菜单时，我需要知道是哪一列表头被点击，从而在后来调用sort_ascend()排序函数时能够根据不同列进行不同排序策略，那么Qt::ActionsContextMenu就做不到了。
+    这种需要捕捉弹出位置的情况只好用Qt::ActionsContextMenu了，customContextMenuRequested ( const QPoint & pos )信号返回点击位置pos（在表头视口坐标系中位置），然后表头即可调用logicalIndexAt(pos)函数得到被点击section对应的index即被点击部分的列号，然后存下来可供后面action激活的排序槽使用。
+show_contextmenu(const QPoint& pos)
+{
+    //get related column of headerview
+    contextmenu_column = datatable->horizontalHeader()->logicalIndexAt(pos);
+
+    //show contextmenu
+    if(cmenu)
+    {
+        cmenu->exec(QCursor::pos());
+    }
+}

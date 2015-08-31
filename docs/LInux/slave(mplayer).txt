@@ -1,0 +1,1067 @@
+http://www.mplayerhq.hu/DOCS/tech/slave.txt
+
+//China
+
+
+ mplayer源码中有一个关于mplay slave 模式的说明文档：/DOCS/tech/slave.txt，下面是中文翻译
+
+slave模式协议
+-------------------
+
+        在关于slave模式，MPlayer为后台运行其他程序，不再截获键盘事件，MPlayer会从标准输入读一个换行符（\n）分隔开的命令。
+
+       要动手尝试slave模式，运行   mplayer -slave -quiet <movie>，并在控制台窗口输入slave命令。
+
+ 您也可以使用一个fifo文件（命名管道）：
+    mkfifo </tmp/fifofile>
+    mplayer -slave -input file=</tmp/fifofile> <movie>
+
+大多数slave模式命令相当于命令行选项，但并非一定要在相同的名称。详细说明中可以在手册中找到
+
+    所有命令都可以以前缀“pausing”，“pausing_keep”，或“pausing_toggle”为前缀。
+
+    “pausing”告诉MPlayer暂停尽快正在处理的命令。
+
+     “pausing_keep”告诉MPlayer暂定保持只要它已在暂停模式。
+
+    “pausing_toggle”告诉MPlayer暂定保持只要它尚未暂停模式。
+
+    请注意，“尽可能“可以在命令完全执行之前。
+
+
+各种提示和技巧（帮助扩展！）：
+
+- 尝试使用例如
+    pausing_keep_force pt_step 1
+
+    get_property pause
+    切换到下一个文件，它避免在转换到新的音频文件之前旧文件播放一小段时间
+
+可用的命令（'mplayer -input cmdlist的'会打印出一份清单）：
+
+alt_src_step <value> (ASX playlist only)
+    当有一个以上的源可以有选择下一个/前一个。
+
+audio_delay <value> [abs]
+    设置/调整音频延迟。
+    如果[abs]不提供或为零，调整迟延<value>秒。
+    如果[abs]不为零，将延迟到<value>秒。
+
+[brightness|contrast|gamma|hue|saturation] <value> [abs]
+    设置/调整视频参数。
+    如果[abs]不提供或为零，修改参数为<value>。
+    如果[abs]不为零，参数设置为<value>。
+    <value>的范围是[-100，100]。
+
+change_rectangle <val1> <val2>
+    更改矩形滤波器矩形的坐标。
+        <val1>
+            必须是下列之一：
+                0 =宽度
+                1 =高度
+                2 = x坐标
+                3 = y坐标
+        <val2>
+            如果<val1>为0或1：
+                整数加/减去宽/高。
+                正值宽度/高度和负值减去它。
+            如果<val1>是2或3：
+                相对矩形左上角的整数值。正值移动矩形向右/向下和负值移动矩形向左/向上。
+
+dvb_set_channel <channel_number> <card_number>
+    设置的DVB通道。
+
+dvdnav <button_name>
+     给定dvdnav按钮。
+        up
+        down
+        left
+        right
+        menu
+        select
+        prev
+        mouse
+
+edl_mark
+    将当前位置写入EDL文件。
+
+frame_drop [value]
+    切换/设置帧的模式。
+
+get_audio_bitrate
+    打印出当前文件音频比特率。
+
+get_audio_codec
+    打印出的音频当前文件的编解码器的名称。
+
+get_audio_samples
+    打印出的音频和当前文件的声道数。
+
+get_file_name
+    打印出当前文件名。
+
+get_meta_album
+    打印出当前文件的'专辑'的元数据。
+
+get_meta_artist
+    打印出当前文件的'艺术家'的元数据。
+
+get_meta_comment
+    打印出当前文件的'评论'的元数据。
+
+get_meta_genre
+    打印出当前文件的'流派'的元数据。
+
+get_meta_title
+    打印出当前文件的'标题'的元数据。
+
+get_meta_track
+    打印出当前文件的'音轨的数量'的元数据。
+
+get_meta_year
+    打印出当前文件的'年份'的元数据。
+
+get_percent_pos
+    打印出文件中的当前位置为整数百分比[0-100）。
+
+get_property <property>
+    打印出的属性的当前值。
+
+get_sub_visibility
+    打印出字幕能见度（1 ==开启，0 ==关闭）。
+
+get_time_length
+    打印出当前文件的长度用秒表示。
+
+get_time_pos
+    打印出在文件的当前位置用秒表示，采用浮点数。
+
+get_vo_fullscreen
+    全屏状态打印出来（1 == 全屏，0 ==窗口）。
+
+get_video_bitrate
+    打印出当前文件的视频比特率。
+
+get_video_codec
+    打印出当前视频文件的编解码器的名称。
+
+get_video_resolution
+    打印出当前文件的视频分辨率。
+
+screenshot <value>
+    截屏。要求屏幕过滤器加载。
+        0以一个单独的截图。
+        1启动/停止服用，每帧画面。
+
+gui_[about|loadfile|loadsubtitle|play|playlist|preferences|skinbrowser|stop]
+    图形用户界面行动
+
+key_down_event <value>
+    注入<value>到MPlayer的关键代码的事件。
+
+loadfile <file|url> <append>
+    加载给定的文件/网址，停止当前文件的播放/网址。
+    如果是<append>非零继续播放和文件/网址
+    追加到当前播放列表代替。
+
+loadlist <file> <append>
+    加载给定的播放列表文件，停止当前文件的播放。
+    如果<append>是非零和继续播放文件,文件追加到当前播放列表。
+
+loop <value> [abs]
+    调整/设置怎样的电影应该是循环多次。 -1代表不循环，永远的0。
+
+菜单命令>
+    执行上显示OSD菜单命令。
+        up 移动光标向上。
+        down 移动光标向下。
+        ok 接受的选择。
+        cancel 取消选择。
+        hide 隐藏的OSD菜单。
+
+set_menu <menu_name>
+    显示菜单命名<menu_name>。
+
+mute [value]
+    切换声音输出静音或将其设置为[value]（value>=0）
+    （1 ==开启，0 ==关闭）。
+
+osd [level]
+    切换OSD模式或将其设置为[level]在[level]>= 0。
+
+osd_show_property_text <string> [duration] [level]
+    显示一项关于OSD扩展属性的字符串，看到-playing-msg 用于描述可用的扩展。如果[duration]>=0,显示为[duration]ms。 [level]设置所需的最低水平OSD该消息可见（默认是：0 -始终显示）。
+
+osd_show_text <string> [duration] [level]
+    查看OSD的<string>。
+
+panscan <-1.0 - 1.0> | <0.0 - 1.0> <abs>
+    增加或减少pan-and-scan的<value>的范围，1.0是最高的。
+    负值降低pan-and-scan范围。
+    如果<abs>！= 0，那么pan-and-scan范围被解释为绝对的范围。
+
+pause
+    暂停/取消暂停播放。
+
+frame_step
+    播放一帧，然后暂停。
+
+pt_step <value> [force]
+    转到下一个/上的播放树项。标志的<value>讲述
+    该方向。如果没有项目可在给定的方向不会做任何事，除非[force]不为零。
+
+pt_up_step <value>[部队]
+    类似pt_step，但跳转到下一个/父列表中的前一个项目。
+    有助于摆脱在播放树内部循环。
+
+quit [value]
+    退出MPlayer。可选的整数[value]的值作为返回代码
+    为mplayer的进程（默认值：0）。
+
+radio_set_channel <channel>
+    切换到<channel>。在‘channel’的广播参数需要设置。
+
+radio_set_freq <frequency in MHz>
+    设置广播频率调谐器。
+
+radio_step_channel <-1|1>
+    步向前（1）或向后（-1频道列表）。只有当'channel'的广播参数设置。
+
+radio_step_freq <value>
+    调整频率的<value>（正数 - 向上，负数 - 向下）。
+
+
+
+
+seek <value> [type]
+    定位电影的某些地方。
+        0 是一个相对定位+/- <value>（默认值）。
+        1 是定位<value>％在电影里。
+        2 是寻求一个绝对位置的<value>秒。
+
+
+
+
+seek_chapter <value> [type]
+    定位一章的开始。
+        0 是一个相对寻求+/- <value>章节（默认）。
+        1 定位到<value>章。
+
+switch_angle <value>
+    转换ID为角度[value]。通过循环如果用角度[value]省略或负数。
+
+set_mouse_pos的<X> <y>
+    告诉MPlayer的窗口中鼠标坐标。
+    此命令不移动鼠标！
+
+set_property <property> <value>
+    设置属性。
+
+speed_incr <value>
+    增加<value>当前回放速度。
+
+speed_mult <value>
+    目前速度乘以<value>。
+
+speed_set <value>
+    设定速度为<value>。
+
+step_property <property> [value] [direction]
+    通过value来改变属性，或者，如果没给定或为0则增加默认值。如果小于零，方向是相反的方向。
+
+stop
+    停止播放。
+
+sub_alignment [value]
+    切换/设置对齐字幕。
+        0 顶部对齐
+        1 居中对齐
+        2 底部对齐
+
+sub_delay <value> [abs]
+    调整了字幕延迟+/- <value>秒或将其设置<value>
+    秒时[abs]不为零。
+
+sub_load <subtitle_file>
+    从<subtitle_file>加载字幕。
+
+sub_log
+    当前日志上显示的字幕或连同文件名和时间信息的〜/.mplayer/subtitle_log。
+
+sub_pos <value> [abs]
+    调整/设置字幕的位置。
+
+sub_remove [value]
+    如果[value]参数是当前和非负，并取消了字幕文件的[value]索引。如果参数省略或负，除去
+    所有的字幕文件。
+
+sub_select [value]
+    显示字幕的索引[value]。关闭字幕显示，如果关闭[value]的值为-1或比更高可用的字幕指数更大。
+    可用的字幕周期，如果[value]省略或低于-1。支持字幕来源是 -sub 选项在命令行，VOBsubs，DVD字幕和Ogg和Matroska文本流。
+    这主要是循环所有字幕命令，如果要设置一个特定的字幕，使用sub_file，sub_vob，或sub_demux。
+
+sub_source [source]
+    显示第一个字幕，从[source]。这里[source]是一个整数：
+    SUB_SOURCE_SUBS（0）用于文件字幕
+    SUB_SOURCE_VOBSUB（1） VOBSub文件
+    SUB_SOURCE_DEMUX（2）在媒体文件或DVD嵌入字幕。
+    如果[source]为-1，将关闭字幕显示。如果[source]低于-1，将循环每个之间的现有资源第一个字幕。
+
+sub_file [value]
+    显示字幕specifid由[value]的文件subs。在[value]的值
+    通过相应的ID_FILE_SUB_ID'-identify'报告的值。
+    如果[value]的值-1，将关闭字幕显示。如果[value]小于-1，
+    将循环的所有文件subs。
+
+sub_vob [value]
+    显示字幕specifid由[value]的vobsubs。在[value]的值
+    通过相应的ID_VOBSUB_ID'-identify'报告的值。
+    如果[value]的值-1，将关闭字幕显示。如果[value]小于-1，
+    将循环的所有vobsubs。
+
+sub_demux [value]
+    显示字幕specifid由[value]从DVD字幕或嵌入在媒体文件。在[value]的值对应ID_SUBTITLE_ID值'-identify'，。如果[value]的值-1，将关闭字幕显示。
+    如果[value]小于-1，将循环所有的DVD字幕或嵌入字幕。
+
+sub_scale <value> [abs]
+    调整字幕大小+/- <value>或将其设置为<value>时，[abs]
+    不为零。
+
+vobsub_lang
+    这是与sub_select为了向后兼容。
+
+sub_step<value>
+    在字幕列表前进<value>步，如果<value>
+    是为负，倒退<value>步。
+
+sub_visibility [value]
+    切换/设置字幕。
+
+forced_subs_only [value]
+    强制切换/设置字幕。
+
+switch_audio [value]（目前的MPEG*，AVI，的Matroska和libav库处理流）
+    切换到音频文件通过ID[value]。循环
+    歌曲，如果[value]省略或负数。
+
+switch_angle [value]（DVD光盘只）
+    切换到DVD的角度通过ID[value]。循环
+    如果可用角度，如果[value]省略或负数。
+
+switch_ratio [value]
+    在运行时改变长宽比。 [value]是表示新的长宽比
+    作为浮动16 / 9（例如1.77778）。
+    这可能与某些视频过滤器的问题。
+
+switch_title [value]（DVDNAV only）
+    切换到DVD标题通过ID[value]。循环可用标题，如果[value]的值省略或负数。
+
+switch_vsync [value]
+    切换场同步（1 ==开启，0 ==关闭）。如果[value]的值没有提供，刷新同步状态反转。
+
+teletext_add_digit <value>
+    进入/离开字幕的页面号编辑模式，并追加提供的以前输入的数字。
+    0 .. 9 - 附加apropriate数字。 （启用编辑模式，如果从一般要求模式，并切换到正常模式时。）
+      -     - 删除最后的页码数字。 （退格仿真，只能在页码编辑模式。）
+
+teletext_go_link <1-6>
+    按照目前的字幕的页面给出链接。
+
+tv_start_scan
+    电视频道开始自动扫描。
+
+tv_step_channel <channel>
+    选择下一个/上一个电视频道。
+
+tv_step_norm
+    更改电视制式。
+
+tv_step_chanlist
+    改变频道列表。
+
+tv_set_channel <channel>
+    设置当前的电视频道。
+
+tv_last_channel
+    设置当前电视频道到最后一个。
+
+tv_set_freq <frequency in MHz>
+    设置电视调谐器的频率。
+
+tv_step_freq <frequency offset in MHz>
+    设置电视调谐器的频率相对于当前值。
+
+tv_set_norm <norm>
+    电视调谐器设置规范（包括PAL，SECAM，NTSC制式，...).
+
+tv_set_brightness <-100 - 100> [abs]
+    设置电视调谐器的亮度或调整，如[abs]设置为0。
+
+tv_set_contrast <-100 -100> [abs]
+    设置电视调谐器的对比或调整，如[abs]设置为0。
+
+tv_set_hue <-100 - 100> [abs]
+    设置电视调谐器色调或调整，如[abs]设置为0。
+
+tv_set_saturation <-100 - 100> [abs]
+    设置电视调谐器饱和或调整，如[abs]设置为0。
+
+use_master
+    主之间切换和PCM音量控制。
+
+vo_border [value]
+    切换/设置边界显示。
+
+vo_fullscreen [value]
+    切换/设置全屏模式。
+
+vo_ontop [value]
+    切换/设置保持在最上层。
+
+vo_rootwin [value]
+    切换/设置在根窗口播放。
+
+volume <value> [absvou]
+    增大/减小音量，或将其设置为<value>，如果[abs]不为零。
+
+
+下面的命令，实际上只可用于OSD菜单控制台模式：
+
+
+help
+    帮助文本显示，目前还是空的。
+
+exit
+    从OSD菜单退出控制台。不像'quit'，不退出MPlayer的。
+
+hide
+    隐藏了OSD菜单控制台。点击菜单命令unhides它。其他按键绑定的行为一切如常。
+
+run <value>
+    运行<value>的shell命令。在OSD菜单控制台模式标准输出和标准输入
+    是通过视频输出。
+
+
+
+
+
+//English
+SLAVE MODE PROTOCOL
+-------------------
+
+The -slave option switches on slave mode, in which MPlayer works as a backend
+for other programs. Instead of intercepting keyboard events, MPlayer will read
+commands separated by a newline (\n) from stdin.
+
+To try slave mode out by hand, run
+
+  mplayer -slave -quiet <movie>
+
+and type slave commands into the console window.
+
+You can also use a FIFO file (named pipe):
+
+  mkfifo </tmp/fifofile>
+  mplayer -slave -input file=</tmp/fifofile> <movie>
+
+Most slave mode commands are equivalent to command line options, though not
+necessarily under the same name. Detailed descriptions can be found in the
+man page.
+
+All commands can be prefixed with one of "pausing ", "pausing_keep ", or
+"pausing_toggle ". "pausing " tells MPlayer to pause as soon as possible
+after processing the command. "pausing_keep " tells MPlayer to do so only if
+it was already in paused mode. "pausing_toggle " tells MPlayer to do so
+only if it was not already in paused mode. Please note that "as soon as
+possible" can be before the command is fully executed.
+As a temporary hack, there is also the _experimental_ "pausing_keep_force "
+prefix, with which MPlayer will not exit the pause loop at all.
+Like this you can avoid the "frame stepping" effect of "pausing_keep "
+but most commands will either not work at all or behave in unexpected ways.
+For "set_mouse_pos" and "key_down_event", "pausing_keep_force" is the default
+since other values do not make much sense for them.
+
+
+Various tips and tricks (please help expand it!):
+
+- Try using something like
+    pausing_keep_force pt_step 1
+    get_property pause
+  to switch to the next file. It avoids audio playback starting to play
+  the old file for a short time before switching to the new one.
+- To ensure the user can't control MPlayer "behind your back" use
+  something like -input nodefault-bindings -noconfig all
+
+
+Available commands ('mplayer -input cmdlist' will print a list):
+
+af_add <filter_arguments_list>  (comma separated list of audio filters with parameters)
+    (experimental) Load the given list of audio filters.
+
+af_clr
+    (experimental) Unload all loaded audio filters.
+
+af_cmdline <filter_name> <filter_arguments>
+    (experimental) Send new command-line options to a filter with the given name.
+
+af_del <filter_name_list> (comma separated list of audio filter's names)
+    (experimental) Unload the first occurrence of the filters, if loaded.
+
+af_switch <filter_arguments_list> (comma separated list of audio filters with parameters)
+    (experimental) Remove all the audio filters and replace them with the given list.
+
+alt_src_step <value> (ASX playlist only)
+    When more than one source is available it selects the next/previous one.
+
+audio_delay <value> [abs]
+    Set/adjust the audio delay.
+    If [abs] is not given or is zero, adjust the delay by <value> seconds.
+    If [abs] is nonzero, set the delay to <value> seconds.
+
+[brightness|contrast|gamma|hue|saturation] <value> [abs]
+    Set/adjust video parameters.
+    If [abs] is not given or is zero, modifies parameter by <value>.
+    If [abs] is non-zero, parameter is set to <value>.
+    <value> is in the range [-100, 100].
+
+capturing [value]
+    Toggle/set capturing the primary stream like -dumpstream.
+    Requires the -capture parameter to be given.
+
+change_rectangle <val1> <val2>
+    Change the position of the rectangle filter rectangle.
+        <val1>
+            Must be one of the following:
+                0 = width
+                1 = height
+                2 = x position
+                3 = y position
+        <val2>
+            If <val1> is 0 or 1:
+                Integer amount to add/subtract from the width/height.
+                Positive values add to width/height and negative values
+                subtract from it.
+            If <val1> is 2 or 3:
+                Relative integer amount by which to move the upper left
+                rectangle corner. Positive values move the rectangle
+                right/down and negative values move the rectangle left/up.
+
+dvb_set_channel <channel_number> <card_number>
+    Set DVB channel.
+
+dvdnav <button_name>
+    Press the given dvdnav button.
+        up
+        down
+        left
+        right
+        menu
+        select
+        prev
+        mouse
+
+edl_loadfile <filename>
+    Load new EDL file.
+
+edl_mark
+    Write the current position into the EDL file.
+
+frame_drop [value]
+    Toggle/set frame dropping mode.
+
+get_audio_bitrate
+    Print out the audio bitrate of the current file.
+
+get_audio_codec
+    Print out the audio codec name of the current file.
+
+get_audio_samples
+    Print out the audio frequency and number of channels of the current file.
+
+get_file_name
+    Print out the name of the current file.
+
+get_meta_album
+    Print out the 'Album' metadata of the current file.
+
+get_meta_artist
+    Print out the 'Artist' metadata of the current file.
+
+get_meta_comment
+    Print out the 'Comment' metadata of the current file.
+
+get_meta_genre
+    Print out the 'Genre' metadata of the current file.
+
+get_meta_title
+    Print out the 'Title' metadata of the current file.
+
+get_meta_track
+    Print out the 'Track Number' metadata of the current file.
+
+get_meta_year
+    Print out the 'Year' metadata of the current file.
+
+get_percent_pos
+    Print out the current position in the file, as integer percentage [0-100).
+
+get_property <property>
+    Print out the current value of a property.
+
+get_sub_visibility
+    Print out subtitle visibility (1 == on, 0 == off).
+
+get_time_length
+    Print out the length of the current file in seconds.
+
+get_time_pos
+    Print out the current position in the file in seconds, as float.
+
+get_vo_fullscreen
+    Print out fullscreen status (1 == fullscreened, 0 == windowed).
+
+get_video_bitrate
+    Print out the video bitrate of the current file.
+
+get_video_codec
+    Print out the video codec name of the current file.
+
+get_video_resolution
+    Print out the video resolution of the current file.
+
+gui <message>
+    Send GUI skin message <message>. (See the skin documentation on GUI
+    messages for details.)
+
+screenshot <value>
+    Take a screenshot. Requires the screenshot filter to be loaded.
+        0 Take a single screenshot.
+        1 Start/stop taking screenshot of each frame.
+
+key_down_event <value>
+    Inject <value> key code event into MPlayer.
+
+loadfile <file|url> <append>
+    Load the given file/URL, stopping playback of the current file/URL.
+    If <append> is nonzero playback continues and the file/URL is
+    appended to the current playlist instead.
+
+loadlist <file> <append>
+    Load the given playlist file, stopping playback of the current file.
+    If <append> is nonzero playback continues and the playlist file is
+    appended to the current playlist instead.
+
+loop <value> [abs]
+    Adjust/set how many times the movie should be looped. -1 means no loop,
+    and 0 forever.
+
+menu <command>
+    Execute an OSD menu command.
+        up     Move cursor up.
+        down   Move cursor down.
+        ok     Accept selection.
+        cancel Cancel selection.
+        hide   Hide the OSD menu.
+
+set_menu <menu_name>
+    Display the menu named <menu_name>.
+
+mute [value]
+    Toggle sound output muting or set it to [value] when [value] >= 0
+    (1 == on, 0 == off).
+
+osd [level]
+    Toggle OSD mode or set it to [level] when [level] >= 0.
+
+osd_show_progression
+    Show the progression bar, the elapsed time and the total duration of the
+    movie on the OSD.
+
+osd_show_property_text <string> [duration] [level]
+    Show an expanded property string on the OSD, see -playing-msg for a
+    description of the available expansions. If [duration] is >= 0 the text
+    is shown for [duration] ms. [level] sets the minimum OSD level needed
+    for the message to be visible (default: 0 - always show).
+
+osd_show_text <string> [duration] [level]
+    Show <string> on the OSD.
+
+panscan <-1.0 - 1.0> | <0.0 - 1.0> <abs>
+    Increase or decrease the pan-and-scan range by <value>, 1.0 is the maximum.
+    Negative values decrease the pan-and-scan range.
+    If <abs> is != 0, then the pan-and scan range is interpreted as an
+    absolute range.
+
+pause
+    Pause/unpause the playback.
+
+frame_step
+    Play one frame, then pause again.
+
+pt_step <value> [force]
+    Go to the next/previous entry in the playtree. The sign of <value> tells
+    the direction.  If no entry is available in the given direction it will do
+    nothing unless [force] is non-zero.
+
+pt_up_step <value> [force]
+    Similar to pt_step but jumps to the next/previous entry in the parent list.
+    Useful to break out of the inner loop in the playtree.
+
+quit [value]
+    Quit MPlayer. The optional integer [value] is used as the return code
+    for the mplayer process (default: 0).
+
+radio_set_channel <channel>
+    Switch to <channel>. The 'channels' radio parameter needs to be set.
+
+radio_set_freq <frequency in MHz>
+    Set the radio tuner frequency.
+
+radio_step_channel <-1|1>
+    Step forwards (1) or backwards (-1) in channel list. Works only when the
+    'channels' radio parameter was set.
+
+radio_step_freq <value>
+    Tune frequency by the <value> (positive - up, negative - down).
+
+seek <value> [type]
+    Seek to some place in the movie.
+        0 is a relative seek of +/- <value> seconds (default).
+        1 is a seek to <value> % in the movie.
+        2 is a seek to an absolute position of <value> seconds.
+
+seek_chapter <value> [type]
+    Seek to the start of a chapter.
+        0 is a relative seek of +/- <value> chapters (default).
+        1 is a seek to chapter <value>.
+
+switch_angle <value>
+    Switch to the angle with the ID [value]. Cycle through the
+    available angles if [value] is omitted or negative.
+
+set_mouse_pos <x> <y>
+    Tells MPlayer the coordinates of the mouse in the window.
+    This command doesn't move the mouse!
+
+set_property <property> <value>
+    Set a property.
+
+speed_incr <value>
+    Add <value> to the current playback speed.
+
+speed_mult <value>
+    Multiply the current speed by <value>.
+
+speed_set <value>
+    Set the speed to <value>.
+
+step_property <property> [value] [direction]
+    Change a property by value, or increase by a default if value is
+    not given or zero. The direction is reversed if direction is less
+    than zero.
+
+stop
+    Stop playback.
+
+sub_alignment [value]
+    Toggle/set subtitle alignment.
+        0 top alignment
+        1 center alignment
+        2 bottom alignment
+
+sub_delay <value> [abs]
+    Adjust the subtitle delay by +/- <value> seconds or set it to <value>
+    seconds when [abs] is nonzero.
+
+sub_load <subtitle_file>
+    Loads subtitles from <subtitle_file>.
+
+sub_log
+    Logs the current or last displayed subtitle together with filename
+    and time information to ~/.mplayer/subtitle_log. Intended purpose
+    is to allow convenient marking of bogus subtitles which need to be
+    fixed while watching the movie.
+
+sub_pos <value> [abs]
+    Adjust/set subtitle position.
+
+sub_remove [value]
+    If the [value] argument is present and non-negative, removes the subtitle
+    file with index [value]. If the argument is omitted or negative, removes
+    all subtitle files.
+
+sub_select [value]
+    Display subtitle with index [value]. Turn subtitle display off if
+    [value] is -1 or greater than the highest available subtitle index.
+    Cycle through the available subtitles if [value] is omitted or less
+    than -1 (forward or backward respectively).
+    Supported subtitle sources are -sub options on the command
+    line, VOBsubs, DVD subtitles, and Ogg and Matroska text streams.
+    This command is mainly for cycling all subtitles, if you want to set
+    a specific subtitle, use sub_file, sub_vob, or sub_demux.
+
+sub_source [source]
+    Display first subtitle from [source]. Here [source] is an integer:
+    SUB_SOURCE_SUBS   (0) for file subs
+    SUB_SOURCE_VOBSUB (1) for VOBsub files
+    SUB_SOURCE_DEMUX  (2) for subtitle embedded in the media file or DVD subs.
+    If [source] is -1, will turn off subtitle display.
+    If [value] is omitted or less than -1, will cycle between the first subtitle
+    of each currently available source (forward or backward respectively).
+
+sub_file [value]
+    Display subtitle specified by [value] for file subs. The [value] is
+    corresponding to ID_FILE_SUB_ID values reported by '-identify'.
+    If [value] is -1, will turn off subtitle display.
+    If [value] is omitted or less than -1, will cycle all file subs
+    (forward or backward respectively).
+
+sub_vob [value]
+    Display subtitle specified by [value] for VOBsubs. The [value] is
+    corresponding to ID_VOBSUB_ID values reported by '-identify'.
+    If [value] is -1, will turn off subtitle display.
+    If [value] is omitted or less than -1, will cycle all VOBsubs
+    (forward or backward respectively).
+
+sub_demux [value]
+    Display subtitle specified by [value] for subtitles from DVD or embedded
+    in media file. The [value] is corresponding to ID_SUBTITLE_ID values
+    reported by '-identify'. If [value] is -1, will turn off subtitle display.
+    If [value] is omitted or less than -1, will cycle all DVD subs or embedded subs
+    (forward or backward respectively).
+
+sub_scale <value> [abs]
+    Adjust the subtitle size by +/- <value> or set it to <value> when [abs]
+    is nonzero.
+
+vobsub_lang
+    This is a stub linked to sub_select for backwards compatibility.
+
+sub_step <value>
+    Step forward in the subtitle list by <value> steps or backwards if <value>
+    is negative.
+
+sub_visibility [value]
+    Toggle/set subtitle visibility.
+
+forced_subs_only [value]
+    Toggle/set forced subtitles only.
+
+switch_audio [value] (currently MPEG*, AVI, Matroska and streams handled by libavformat)
+    Switch to the audio track with the ID [value]. Cycle through the
+    available tracks if [value] is omitted or negative.
+
+switch_angle [value] (DVDs only)
+    Switch to the DVD angle with the ID [value]. Cycle through the
+    available angles if [value] is omitted or negative.
+
+switch_ratio [value]
+    Change aspect ratio at runtime. [value] is the new aspect ratio expressed
+    as a float (e.g. 1.77778 for 16/9), or special value -1 to reset to
+    original aspect ratio (ditto if [value] is missing), or special value 0
+    to disable automatic movie aspect ratio compensation.
+    There might be problems with some video filters.
+
+switch_title [value] (DVDNAV only)
+    Switch to the DVD title with the ID [value]. Cycle through the
+    available titles if [value] is omitted or negative.
+
+switch_vsync [value]
+    Toggle vsync (1 == on, 0 == off). If [value] is not provided,
+    vsync status is inverted.
+
+teletext_add_digit <value>
+    Enter/leave teletext page number editing mode and append given digit to
+    previously entered one.
+    0..9 - Append appropriate digit. (Enables editing mode if called from normal
+           mode, and switches to normal mode when third digit is entered.)
+    -    - Delete last digit from page number. (Backspace emulation, works only
+           in page number editing mode.)
+
+teletext_go_link <1-6>
+    Follow given link on current teletext page.
+
+tv_start_scan
+    Start automatic TV channel scanning.
+
+tv_step_channel <channel>
+    Select next/previous TV channel.
+
+tv_step_norm
+    Change TV norm.
+
+tv_step_chanlist
+    Change channel list.
+
+tv_set_channel <channel>
+    Set the current TV channel.
+
+tv_last_channel
+    Set the current TV channel to the last one.
+
+tv_set_freq <frequency in MHz>
+    Set the TV tuner frequency.
+
+tv_step_freq <frequency offset in MHz>
+    Set the TV tuner frequency relative to current value.
+
+tv_set_norm <norm>
+    Set the TV tuner norm (PAL, SECAM, NTSC, ...).
+
+tv_set_brightness <-100 - 100> [abs]
+    Set TV tuner brightness or adjust it if [abs] is set to 0.
+
+tv_set_contrast <-100 -100> [abs]
+    Set TV tuner contrast or adjust it if [abs] is set to 0.
+
+tv_set_hue <-100 - 100> [abs]
+    Set TV tuner hue or adjust it if [abs] is set to 0.
+
+tv_set_saturation <-100 - 100> [abs]
+    Set TV tuner saturation or adjust it if [abs] is set to 0.
+
+use_master
+    Switch volume control between master and PCM.
+
+vo_border [value]
+    Toggle/set borderless display.
+
+vo_fullscreen [value]
+    Toggle/set fullscreen mode.
+
+vo_ontop [value]
+    Toggle/set stay-on-top.
+
+vo_rootwin [value]
+    Toggle/set playback on the root window.
+
+volume <value> [abs]
+    Increase/decrease volume or set it to <value> if [abs] is nonzero.
+
+overlay_add <file> <id> <x> <y> <color>
+    Add an overlay bitmap. <file> must be a PGM file without comments.
+    <id> is an arbitrary integer used to identify the overlay.
+
+overlay_remove <id>
+    Remove all overlays identified by <id>.
+
+
+The following commands are really only useful for OSD menu console mode:
+
+help
+    Displays help text, currently empty.
+
+exit
+    Exits from OSD menu console. Unlike 'quit', does not quit MPlayer.
+
+hide
+    Hides the OSD menu console. Clicking a menu command unhides it. Other
+    keybindings act as usual.
+
+run <string>
+    Run <string> with properties expanded as shell command. In OSD menu
+    console mode stdout and stdin are through the video output driver.
+    Property expansion happens in the same way as for osd_show_property_text.
+    Note: MPlayer will do property expansion on anything of the form
+    ${somevar} before it is passed to the shell.
+    This means that you cannot use this syntax for anything you actually
+    want the shell to handle, though any other form like $somevar will
+    be passed on to and processed by the shell.
+
+    Example:
+    run "echo ${filename} ${stream_pos} >> <path_to_file>"
+
+
+Available properties:
+
+name               type      min     max     get set step comment
+=================================================================
+
+osdlevel           int       0       3       X   X   X    as -osdlevel
+speed              float     0.01    100     X   X   X    as -speed
+loop               int       -1              X   X   X    as -loop
+pause              flag      0       1       X            1 if paused, use with pausing_keep_force
+filename           string                    X            file playing w/o path
+path               string                    X            file playing
+demuxer            string                    X            demuxer used
+stream_pos         pos       0               X   X        position in stream
+stream_start       pos       0               X            start pos in stream
+stream_end         pos       0               X            end pos in stream
+stream_length      pos       0               X            (end - start)
+stream_time_pos    time      0               X            present position in stream (in seconds)
+titles             int                       X            number of titles
+chapter            int       0               X   X   X    select chapter
+chapters           int                       X            number of chapters
+angle              int       0               X   X   X    select angle
+length             time                      X            length of file in seconds
+percent_pos        int       0       100     X   X   X    position in percent
+time_pos           time      0               X   X   X    position in seconds
+metadata           str list                  X            list of metadata key/value
+metadata/*         string                    X            metadata values
+
+
+
+
+volume             float     0       100     X   X   X    change volume
+
+
+
+balance            float     -1      1       X   X   X    change audio balance
+mute               flag      0       1       X   X   X
+audio_delay        float     -100    100     X   X   X
+audio_format       int                       X
+audio_codec        string                    X
+audio_bitrate      int                       X
+samplerate         int                       X
+channels           int                       X
+switch_audio       int       -2      255     X   X   X    select audio stream
+switch_angle       int       -2      255     X   X   X    select DVD angle
+switch_title       int       -2      255     X   X   X    select DVD title
+capturing          flag      0       1       X   X   X    dump primary stream if enabled
+fullscreen         flag      0       1       X   X   X
+deinterlace        flag      0       1       X   X   X
+ontop              flag      0       1       X   X   X
+rootwin            flag      0       1       X   X   X
+border             flag      0       1       X   X   X
+framedropping      int       0       2       X   X   X    1 = soft, 2 = hard
+gamma              int       -100    100     X   X   X
+brightness         int       -100    100     X   X   X
+contrast           int       -100    100     X   X   X
+saturation         int       -100    100     X   X   X
+hue                int       -100    100     X   X   X
+panscan            float     0       1       X   X   X
+vsync              flag      0       1       X   X   X
+video_format       int                       X
+video_codec        string                    X
+video_bitrate      int                       X
+width              int                       X            "display" width
+height             int                       X            "display" height
+fps                float                     X
+aspect             float                     X
+switch_video       int       -2      255     X   X   X    select video stream
+switch_program     int       -1      65535   X   X   X    (see TAB default keybinding)
+sub                int       -1              X   X   X    select subtitle stream
+sub_source         int       -1      2       X   X   X    select subtitle source
+sub_file           int       -1              X   X   X    select file subtitles
+sub_vob            int       -1              X   X   X    select VOBsubs
+sub_demux          int       -1              X   X   X    select subs from demux
+sub_delay          float                     X   X   X
+sub_pos            int       0       100     X   X   X    subtitle position
+sub_alignment      int       0       2       X   X   X    subtitle alignment
+sub_visibility     flag      0       1       X   X   X    show/hide subtitles
+sub_forced_only    flag      0       1       X   X   X
+sub_scale          float     0       100     X   X   X    subtitles font size
+tv_brightness      int       -100    100     X   X   X
+tv_contrast        int       -100    100     X   X   X
+tv_saturation      int       -100    100     X   X   X
+tv_hue             int       -100    100     X   X   X
+teletext_page      int       0       799     X   X   X
+teletext_subpage   int       0       64      X   X   X
+teletext_mode      flag      0       1       X   X   X    0 - off, 1 - on
+teletext_format    int       0       3       X   X   X    0 - opaque,
+                                                          1 - transparent,
+                                                          2 - opaque inverted,
+                                                          3 - transparency inverted,
+teletext_half_page int       0       2       X   X   X    0 - off, 1 - top half,
+                                                          2- bottom half
+

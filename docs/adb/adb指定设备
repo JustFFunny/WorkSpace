@@ -1,0 +1,18 @@
+wuqiankun@wuqiankun-OptiPlex-360:~/Lphone_pc/DRelease$ adb devices
+List of devices attached 
+245de7d0	device
+a041c894	device
+
+wuqiankun@wuqiankun-OptiPlex-360:~/Lphone_pc/DRelease$ adb -s 245de7d0 shell
+shell@Coolpad8297-T01:/ $ exit
+wuqiankun@wuqiankun-OptiPlex-360:~/Lphone_pc/DRelease$ adb -s 245de7d0 shell
+shell@Coolpad8297-T01:/ $ exit 
+wuqiankun@wuqiankun-OptiPlex-360:~/Lphone_pc/DRelease$ adb -s a041c894 shell
+shell@Kraft-T:/ $ exit
+wuqiankun@wuqiankun-OptiPlex-360:~/Lphone_pc/DRelease$ adb -s a041c894 install Lphone_m.apk 
+581 KB/s (421088 bytes in 0.707s)
+	pkg: /data/local/tmp/Lphone_m.apk
+Failure [INSTALL_FAILED_ALREADY_EXISTS]
+wuqiankun@wuqiankun-OptiPlex-360:~/Lphone_pc/DRelease$ adb -s a041c894 push ./Lphone_m.apk /sdcard/
+665 KB/s (421088 bytes in 0.617s)
+wuqiankun@wuqiankun-OptiPlex-360:~/Lphone_pc/DRelease$ 

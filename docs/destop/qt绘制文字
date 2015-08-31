@@ -1,0 +1,29 @@
+drawText
+1、基本绘制：QPainter painter(this);//这个this要斟酌下
+
+                          painter.drawText(100,100,”yafeilinux”);
+
+ 
+
+2、中级绘制：QPainter painter(this);
+                          QRectF ff(100,100,300,200);//设置一个矩形
+                          painter.drawRect(ff); //为了更直观地看到字体的位置，我们绘制出这个矩形
+                          painter.setPen(QColor(Qt::red));//设置画笔颜色为红色
+                          painter.drawText(ff,Qt::AlignHCenter,”yafeilinux”); //让字体水平居中，Qt::AlignBottom|Qt::AlignHCenter实现让文字显示在矩形下面的正中间
+
+                                                                                                                  //可以利用“\n”进行换行，例如”yafei\nlinux”
+
+3 、高级绘制：QFont font(“Arial”,20,QFont::Bold,true);//设置字体的类型，大小，加粗，斜体
+                            font.setUnderline(true);//设置下划线
+                            font.setOverline(true);//设置上划线
+                            font.setCapitalization(QFont::SmallCaps);//设置大小写
+                            font.setLetterSpacing(QFont::AbsoluteSpacing,5);//设置间距
+                            QPainter painter(this);
+                            painter.setFont(font);//添加字体
+                            QRectF ff(100,100,300,200);
+                            painter.drawRect(ff);
+                            painter.setPen(QColor(Qt::red));
+                            painter.drawText(ff,Qt::AlignCenter,”yafeilinux”);
+
+
+ui->tableWidget->setStyleSheet("QTableWidget::item:selected{background-color:rgb(228,217,206)}");

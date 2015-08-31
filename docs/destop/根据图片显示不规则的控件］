@@ -1,0 +1,39 @@
+在Qt中有两种方法来实现不规则形状的窗口
+
+    1.可以设置QWidget的窗口属性Qt::WA_TranslucentBackground为true来实现。但是利用这个属性有很大的限制。在window平台下，你必须设置Qt::FramelessWindowHint属性为true,设置窗口为一个没有标题栏的窗口。在X11平台下，你还要依靠 a compositing window manager.局限很多
+
+    2利用setMask()函数来实现，
+
+     void QWidget::setMask ( const QRegion & region )    可以使得仅和region重叠的区域可见。但是，如果这个区域包括widget的rect()以外的像素，窗口控制的这个区域可见不可见，将取决于具体的平台。  所以，如果获得这个不规则的区域，然后在resizeEvent函数中调用这个函数，就可以获得一个不规则的形状的窗口。
+
+  
+
+    下面的代码是如何使得窗口成为一个圆角矩形。
+
+    void resizeEvent（QEvent* event)
+
+   
+
+        QPainterPath path;
+
+        QRectF rect = QRectF(0,0,200,100);
+
+        path.addRoundRect(rect,20,15);
+
+        QPolygon polygon= path.toFillPolygon().toPolygon();//获得这个路径上的所有的点      
+       QRegion region(polygon);//根据这个点构造这个区域 setMask(region);    }
+
+    由于QPainterPath可以构造很多不规则的形状，所以我们可以构造很多不规则形状的窗口。
+
+ 
+
+例子：设置一个以图片作为不规则边框的窗口。
+
+ShapeWidget::ShapeWidget(QWidget *parent)   //外部重写构造函数
+        : QWidget(parent,Qt::FramelessWindowHint)   //初始化参数类型
+{
+    QPixmap pix;    //设置一个QPixmap的对象。
+    pix.load(":/images/Watermelon.png",0,Qt::AvoidDither|Qt::ThresholdDither|Qt::ThresholdAlphaDither);
+    resize(pix.size()); //设置图片的尺寸
+    setMask(pix.mask());   //先通过pix的方法获得图片的过滤掉透明的部分得到的图片，作为shapeWidget的不规则边框。
+}

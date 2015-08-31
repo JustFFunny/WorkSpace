@@ -1,0 +1,7 @@
+　Meld默认在Ubuntu官方源中，在Ubuntu软件中心搜索一下就可以安装，或者使用命令:
+
+　　$ sudo apt-get install meld
+
+　　安装完毕后，可从“应用程序—编程”里启动，或者使用命令，推荐使用meld命令格式如下
+
+       $ meld /home/yan/version1/test   /home/yan/version2/test   //两个要对比文件或者目录

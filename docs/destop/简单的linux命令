@@ -1,0 +1,192 @@
+
+ls命令是列出目录内容(List Directory Contents)的意思。
+ 运行它就是列出文件夹里的内容，可能是文件也可能是文件夹。
+“ls -l”命令以详情模式(long listing fashion)列出文件夹的内容。 
+  
+  ls -l 输出的命令：
+
+    d (代表了是目录).
+    rwxr-xr-x 是文件或者目录对所属用户，同一组用户和其它用户的权限。
+    上面例子中第一个wuqiankun 代表了文件文件属于用户wuqiankun
+    上面例子中的第二个wuqiankun代表了文件文件属于用户组wuqiankun
+    4096 代表了文件大小为4096字节.
+    May 8 01:06 代表了文件最后一次修改的日期和时间.
+    最后面的就是文件/文件夹的名字
+
+"ls -a"命令会列出文件夹里的所有内容，包括以"."开头的隐藏文件。
+
+
+“sudo”(super user do)命令 允许授权用户执行超级用户或者其它用户的命令。通过在sudoers列表的安全策略来指定
+注意：sudo 允许用户借用超级用户的权限，然而"su"命令实际上是允许用户以超级用户登录。所以sudo比su更安全。并不建议使用sudo或者su来处理日常用途，因为它可能导致严重的错误如果你意外的做错了事，这就是为什么在linux社区流行一句话
+
+
+
+ “mkdir”(Make directory)命令在命名路径下创建新的目录。然而如果目录已经存在了，那么它就会返回一个错误信息"不能创建文件夹，文件夹已经存在了"("cannot create folder, folder already exists")
+mkdir 文件夹名
+
+
+
+ “touch”命令代表了将文件的访问和修改时间更新为当前时间。touch命令只会在文件不存在的时候才会创建它。如果文件已经存在了，它会更新时间戳，但是并不会改变文件的内容。
+1	root@tecmint:~# touch tecmintfile
+
+注意：touch 可以用来在用户拥有写权限的目录下创建不存在的文件
+
+
+
+
+
+
+
+ “chmod”命令就是改变文件的模式位。chmod会根据要求的模式来改变每个所给的文件，文件夹，脚本等等的文件模式（权限）。
+在文件(文件夹或者其它，为了简单起见，我们就使用文件)中存在3中类型的权限
+1	Read (r)=4
+2	Write(w)=2
+3	Execute(x)=1
+
+所以如果你想给文件只读权限，就设置为'4';只写权限，设置权限为'2';只执行权限，设置为1; 读写权限，就是4+2 = 6, 以此类推。
+现在需要设置3种用户和用户组权限。第一个是拥有者，然后是用户所在的组，最后是其它用户。
+1	rwxr-x--x   abc.sh
+
+这里root的权限是 rwx（读写和执行权限），
+所属用户组权限是 r-x (只有读和执行权限, 没有写权限)，
+对于其它用户权限是 -x(只有只执行权限)
+
+为了改变它的权限，为拥有者，用户所在组和其它用户提供读，写，执行权限。
+1	root@tecmint:~# chmod 777 abc.sh
+
+三种都只有读写权限
+1	root@tecmint:~# chmod 666 abc.sh
+
+拥有者用户有读写和执行权限，用户所在的组和其它用户只有可执行权限
+1	root@tecmint:~# chmod 711 abc.sh
+
+注意：对于系统管理员和用户来说，这个命令是最有用的命令之一了。在多用户环境或者服务器上，对于某个用户，如果设置了文件不可访问，那么这个命令就可以解决，如果设置了错误的权限，那么也就提供了为授权的访问。 
+
+
+
+
+
+
+ “chown”命令就是改变文件拥有者和所在用户组。每个文件都属于一个用户组和一个用户。在你的目录下，使用"ls -l",你就会看到像这样的东西。
+1	root@tecmint:~# ls -l
+2	 
+3	drwxr-xr-x 3 server root 4096 May 10 11:14 Binary
+4	drwxr-xr-x 2 server server 4096 May 13 09:42 Desktop
+
+在这里，目录Binary属于用户"server",和用户组"root",而目录"Desktop"属于用户“server”和用户组"server"
+
+“chown”命令用来改变文件的所有权，所以仅仅用来管理和提供文件的用户和用户组授权。
+1	root@tecmint:~# chown server:server Binary
+2	 
+3	drwxr-xr-x 3 server server 4096 May 10 11:14 Binary
+4	drwxr-xr-x 2 server server 4096 May 13 09:42 Desktop
+
+注意：“chown”所给的文件改变用户和组的所有权 到 新的拥有者或者已经存在的用户或者用户组。 
+
+
+
+
+
+ “pwd”（print working directory），在终端中显示当前工作目录的全路径。
+1	root@tecmint:~# pwd
+2	 
+3	/home/user/Desktop
+注意： 这个命令并不会在脚本中经常使用，但是对于新手，当从连接到nux很久后在终端中迷失了路径，这绝对是救命稻草。 
+
+
+
+cd 经常使用的“cd”命令代表了改变目录。它在终端中改变工作目录来执行，复制，移动，读，写等等操作
+“cd ～”会改变工作目录为用户的家目录，而且当用户发现自己在终端中迷失了路径时，非常有用。“cd ..”从当前工作目录切换到(当前工作目录的)父目录。 
+
+
+
+
+
+
+
+ “mv”命令将一个地方的文件移动到另外一个地方去。    文件或者文件夹
+1	root@tecmint:~# mv /home/user/Downloads abc.tar.gz /home/user/Desktop (Return 0 when sucess)
+
+注意：mv 命令可以使用通配符。mv需谨慎使用，因为移动系统的或者未授权的文件不但会导致安全性问题，而且可能系统崩溃。 
+
+mkdir 创建文件夹
+rmdir 删掉文件夹
+
+
+
+
+
+
+
+
+
+
+ “copy”就是复制。它会从一个地方复制一个文件到另外一个地方。
+1	root@tecmint:~# cp /home/user/Downloads abc.tar.gz /home/user/Desktop (Return 0 when sucess)
+
+注意： cp，在shell脚本中是最常用的一个命令，而且它可以使用通配符（在前面一块中有所描述），来定制所需的文件的复制。 
+
+
+
+
+cat”代表了连结（Concatenation），连接两个或者更多文本文件或者以标准输出形式打印文件的内容。
+1	root@tecmint:~# cat a.txt b.txt c.txt d.txt abcd.txt
+1	root@tecmint:~# cat abcd.txt
+2	....
+3	contents of file abcd
+4	...
+
+
+
+
+
+
+"whereis  文件 "   显示程序的位置
+“locate 文件”     显示包含chmsee的文件名或目录名及路径。
+eg: whereis   chmsee
+locate chmsee
+
+
+
+
+
+
+
+
+
+ “date”命令使用标准的输出打印当前的日期和时间，也可以深入设置。
+1	root@tecmint:~# date
+2	 
+3	Fri May 17 14:13:29 IST 2013
+1	root@tecmint:~# date --set='14 may 2013 13:57'
+2	 
+3	Mon May 13 13:57:00 IST 2013
+
+注意：这个命令在脚本中十分有用，以及基于时间和日期的脚本更完美。而且在终端中改变日期和时间，让你更专业！！！（当然你需要root权限才能操作这个，因为它是系统整体改变） 
+
+
+
+
+ “cal”（Calender），它用来显示当前月份或者未来或者过去任何年份中的月份。 
+
+
+
+
+
+
+ “tar”命令是磁带归档(Tape Archive)，对创建一些文件的的归档和它们的解压很有用。
+1	root@tecmint:~# tar -zxvf abc.tar.gz (记住'z'代表了.tar.gz)
+1	root@tecmint:~# tar -jxvf abc.tar.bz2 (记住'j'代表了.tar.bz2)
+1	root@tecmint:~# tar -cvf archieve.tar.gz(.bz2) /path/to/folder/abc
+
+注意： "tar.gz"代表了使用gzip归档，“bar.bz2”使用bzip压缩的，它压缩的更好但是也更慢。
+
+了解更多"tar 命令"的例子，请查看 18 Tar命名例子 
+
+
+
+
+
+
+ Debian系列以“apt”命令为基础，“apt”代表了Advanced Package Tool。APT是一个为Debian系列系统（Ubuntu，Kubuntu等等）开发的高级包管理器，在Gnu/Linux系统上，它会为包自动地，智能地搜索，安装，升级以及解决依赖。 
+

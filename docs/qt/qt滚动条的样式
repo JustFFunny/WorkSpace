@@ -1,0 +1,427 @@
+11111
+textEdit->verticalScrollBar()->setStyleSheet("QScrollBar:vertical {""border:0px solid grey;""width: 35px;""}"
+
+" QScrollBar::handle:vertical {"" background: #8080FF;"" border: 3px solid grey;"" border-radius:5px;"" min-height: 20px;"" }"
+
+" QScrollBar::add-line:vertical {"
+
+" height: 26px;"
+
+" subcontrol-position: bottom;"
+
+" }"
+
+" QScrollBar::sub-line:vertical {"
+
+" height: 26px;"
+
+" subcontrol-position: top;"
+
+" }"
+
+"QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {"" background: none;""}"
+
+QScrollArea
+{
+border:0;
+background:rgb(64,64,71);
+}
+
+
+
+QScrollBar:horizontal
+{
+height:12px;
+border:1px solid black;
+border-color:black;
+margin:0px,0px,0px,0px;
+padding-left:10px;
+padding-right:10px;
+}
+QScrollBar::handle:horizontal
+{
+height:16px;
+min-width:20;
+background:#232329;
+border:1px solid #525252;
+}
+QScrollBar::handle:horizontal::disabled
+{
+background:#232329;
+}
+QScrollBar::handle:horizontal:hover
+{
+background:#232329;
+border:1px solid #E0E0E0;
+}
+QScrollBar::add-line:horizontal
+{
+width:10px;
+background:#121215;
+subcontrol-position:right;
+}
+QScrollBar::sub-line:horizontal
+{
+width:10px;
+background:#121215;
+subcontrol-position:left;
+}
+QScrollBar::add-page:horizontal
+{
+background:#454551;
+}
+
+QScrollBar::sub-page:horizontal
+{
+background:#454551;
+}
+QScrollBar::up-arrow:horizontal
+{
+border-width:1px;
+max-height:16px;
+min-width:17px;
+}
+QScrollBar::down-arrow:horizontal
+{
+border-style:outset;
+border-width:1px;
+}
+
+
+
+QScrollBar:vertical
+{
+width:12px;
+border:1px solid black;
+margin:0px,0px,0px,0px;
+padding-top:10px;
+padding-bottom:10px;
+}
+QScrollBar::handle:vertical
+{
+width:16px;
+background:#232329;
+min-height:20;
+}
+QScrollBar::handle:vertical:hover
+{
+border:1px solid #E0E0E0;
+}
+QScrollBar::handle:vertical::disabled
+{
+background:#232329;
+}
+QScrollBar::handle:vertical:hover
+{
+background:#232329;
+border:1px solid #E0E0E0;
+}
+QScrollBar::add-line:vertical
+{
+height:10px;
+background:#121215;
+subcontrol-position:bottom;
+}
+QScrollBar::sub-line:vertical
+{
+height:10px;
+background:#121215;
+subcontrol-position:top;
+}
+QScrollBar::add-page:vertical
+{
+background:#454551;
+}
+
+QScrollBar::sub-page:vertical
+{
+background:#454551;
+}
+QScrollBar::up-arrow:vertical
+{
+border-width:1px;
+max-height:16px;
+min-width:17px;
+}
+QScrollBar::down-arrow:vertical
+{
+border-style:outset;
+border-width:1px;
+}
+
+ 
+
+);
+
+
+
+
+QScrollBar:horizontal {
+    background: #32CC99;
+    margin-left: 16px;
+    margin-right: 16px;
+}
+QScrollBar::handle:horizontal {
+    min-width: 200px
+}
+QScrollBar::sub-line:horizontal {
+    width: 16px;
+    subcontrol-position: left;
+    subcontrol-origin: margin;
+}
+QScrollBar::add-line:horizontal {
+    width: 16px;
+    subcontrol-position: right;
+    subcontrol-origin: margin;
+}
+ 
+/* 纵向 */
+QScrollBar:vertical {
+    background: #32CC99;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+QScrollBar::handle:vertical {
+    min-height: 200px
+}
+QScrollBar::sub-line:vertical {
+    height: 16px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+QScrollBar::add-line:vertical {
+    height: 16px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+
+
+
+
+
+//Qcomboxbox设置QSS
+
+
+combo_box->setStyleSheet("QComboBox{border:1px solid gray;}"
+  "QComboBox QAbstractItemView::item{height:25px;}"
+  "QComboBox::down-arrow{image:url(:/icon/arrowdown);}"
+  "QComboBox::drop-down{border:0px;}");
+
+
+
+
+
+//滑块设置QSS
+
+spin_box->setStyleSheet("QSpinBox{border:1px solid gray;}"
+  "QSpinBox::up-button{image:url(:/icon/arrow_up);}"
+  "QSpinBox::down-button{image:url(:/icon/arrow_down);}");
+
+//QMenu设置QSS
+QMenu{
+
+padding:5px;
+
+         background:white;
+
+border:1px solid gray;
+
+ }
+
+ QMenu::item{
+
+padding:0px 40px 0px 30px;
+
+height:25px;
+
+ }
+
+ QMenu::item:selected:enabled{
+
+        background:lightgray;
+
+        color:white;
+
+ }
+
+  QMenu::item:selected:!enabled{
+
+        background:transparent;
+
+ }
+
+ QMenu::separator{
+
+        height:1px;
+
+        background:lightgray;
+
+margin:5px 0px 5px 0px;
+
+ }
+
+
+
+
+
+4、QSlider:
+
+QSlider::groove:horizontal{
+
+border:0px;
+
+height:4px;
+
+}  
+
+QSlider::sub-page:horizontal{
+
+        background:white;
+
+}  
+
+QSlider::add-page:horizontal{
+
+        background:lightgray;
+
+} 
+
+QSlider::handle:horizontal{
+
+background:white;
+
+width:10px;
+
+border-radius:5px;
+
+margin:-3px 0px -3px 0px;
+
+}
+
+Qt之界面实现技巧
+
+5、QCheckBox:
+
+QCheckBox{
+
+spacing: 2px; 
+
+}
+
+QCheckBox::indicator {
+
+width: 20px;
+
+height: 20px;
+
+}
+
+QCheckBox::indicator:unchecked {
+
+image: url(:/login/checkbox);
+
+}
+
+QCheckBox::indicator:unchecked:hover {
+
+image: url(:/login/checkbox_hover);
+
+}
+
+QCheckBox::indicator:unchecked:pressed {
+
+image: url(:/login/checkbox_press);
+
+}
+
+QCheckBox::indicator:checked {
+
+image: url(:/login/checkbox_selected);
+
+}
+
+QCheckBox::indicator:checked:hover {
+
+image: url(:/login/checkbox_selected_hover);
+
+}
+
+QCheckBox::indicator:checked:pressed {
+
+image: url(:/login/checkbox_selected_press);
+
+}
+
+Qt之界面实现技巧
+
+6、QScrollBar:
+
+QScrollBar{
+
+background:transparent;
+
+  width: 10px;
+
+}
+
+QScrollBar::handle{
+
+background:rgb(180, 180, 180, 150);
+
+}
+
+QScrollBar::handle:hover{
+
+background:rgb(150, 150, 150, 180);
+
+}
+
+QScrollBar::add-page{
+
+background:transparent;
+
+}
+
+QScrollBar::sub-page{
+
+background:transparent; 
+
+}
+
+QScrollBar::sub-line{
+
+background:transparent;
+
+}
+
+QScrollBar::add-line{
+
+background:transparent;
+
+}	
+
+Qt之界面实现技巧
+ 
+
+7、QStatusBar
+
+QStatusBar::item{
+
+border: 0px;
+
+}
+
+ //不存在分隔线
+
+
+一般也可以使用QPalette
+
+QPalette palette;  
+
+palette.setBrush(QPalette::WindowText, QBrush(Qt::white));  																																			
+																											
+check_box->setPalette(palette);  
+
+
+check_box->setStyleSheet("color:white");

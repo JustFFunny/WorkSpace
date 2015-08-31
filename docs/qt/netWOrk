@@ -1,0 +1,112 @@
+在动手分析前，简单介绍一下HTTP协议。HTTP协议是一种为分布式，合作式，超媒体信息系统。它是一种通用的，无状态（stateless）的协议，除了应用于超文本传输外，它也可以应用于诸如名称服务器和分布对象管理系统之类的系统，这可以通过扩展它的请求方法，错误代码和报头来实现。HTTP的一个特点是数据表现形式是可输入的和可协商性的，这就允许系统能被建立而独立于数据传输。HTTP在1990年WWW全球信息刚刚起步的时候就得到了应用。该规范定义的协议用“HTTP/1.1”表示，是对RFC2608[33]的更新。
+HTTP协议是通过定义一序列的动作（协议文本中称为方法），来完成数据的传输通信。HTTP1.1版本中有这些方法：get、post、head、options、put、delete、trace、connect。
+
+get方法用于获取URI资源，是最为常用的一种方法。
+
+post方法用于向指定URI提交内容，服务器端响应其行为，该方法也极为常用。
+
+head方法向URI发送请求，仅仅只需要获得响应的协议头。
+
+put方法用于向URI发送请求，若URI不存在，则要求服务器端根据请求创建资源。当URI存在时，服务器端必须接受请求内容，将其作为URI资源的修改后版本。
+
+delete方法用于删除URI标识的指定资源。
+
+trace方法用于激活服务器端对请求的循环反馈，反馈作为http响应的正文内容被传输回客户端。
+
+connect方法通常被用于使用代理连接。
+
+更详细的内容请查看相关资料。
+
+回到QT系统，manager->get()调用其实就是HTTP/1.1协议中get方法的实现。
+
+QNetworkReply *QNetworkAccessManager::get(const QNetworkRequest &request)
+{
+    return d_func()->postProcess(createRequest(QNetworkAccessManager::GetOperation, request));
+}
+上面的一行程序中有两个调用：
+
+1、QNetworkAccessManager::createRequest()
+
+2、QNetworkAccessManagerPrivate::postProcess()
+
+先来看createRequest()，两个参数：第一个参数表示使用Get方法；第二个参数是目标网址。
+
+QNetworkReply *QNetworkAccessManager::createRequest(QNetworkAccessManager::Operation op,
+                                                    const QNetworkRequest &req,
+                                                    QIODevice *outgoingData)
+{
+    Q_D(QNetworkAccessManager);
+    QNetworkRequest request = req;
+    if (!request.header(QNetworkRequest::ContentLengthHeader).isValid() &&
+        outgoingData && !outgoingData->isSequential()) {
+        // request has no Content-Length
+        // but the data that is outgoing is random-access
+        request.setHeader(QNetworkRequest::ContentLengthHeader, outgoingData->size());
+    }
+    if (d->cookieJar) {
+        QList<QNetworkCookie> cookies = d->cookieJar->cookiesForUrl(request.url());
+        if (!cookies.isEmpty())
+            request.setHeader(QNetworkRequest::CookieHeader, qVariantFromValue(cookies));
+    }
+
+    // first step: create the reply
+    QUrl url = request.url();
+    QNetworkReplyImpl *reply = new QNetworkReplyImpl(this);
+    QNetworkReplyImplPrivate *priv = reply->d_func();
+    priv->manager = this;
+
+    // second step: fetch cached credentials
+    QNetworkAuthenticationCredential *cred = d->fetchCachedCredentials(url);
+    if (cred) {
+        url.setUserName(cred->user);
+        url.setPassword(cred->password);
+        priv->urlForLastAuthentication = url;
+    }
+
+    // third step: setup the reply
+    priv->setup(op, request, outgoingData);
+#ifndef QT_NO_NETWORKPROXY
+    QList<QNetworkProxy> proxyList = d->queryProxy(QNetworkProxyQuery(request.url()));
+    priv->proxyList = proxyList;
+#endif
+
+    // fourth step: find a backend
+    priv->backend = d->findBackend(op, request);
+    if (priv->backend) {
+        priv->backend->setParent(reply);
+        priv->backend->reply = priv;
+    }
+
+#ifndef QT_NO_OPENSSL
+    reply->setSslConfiguration(request.sslConfiguration());
+#endif
+    return reply;
+}
+代码比较长，主要做了这些事情：
+
+1、设定HTTP请求的头信息（例如客户端请求内容的长度、Cookie等）
+
+2、生成并初始化Reply对象（实际是QNetworkReplyImpl对象）
+
+3、获取本地缓存的认证信息（如果有的话）
+
+4、设定Reply
+
+5、获取一个backend实体
+
+6、如果支持OPENSSL的话，设定SSL的配置
+暂时先放一边后面再对createRequest()做进一步的分析，再来看postProcess()
+QNetworkReply *QNetworkAccessManagerPrivate::postProcess(QNetworkReply *reply)
+{
+    Q_Q(QNetworkAccessManager);
+    QNetworkReplyPrivate::setManager(reply, q);
+    q->connect(reply, SIGNAL(finished()), SLOT(_q_replyFinished()));
+#ifndef QT_NO_OPENSSL
+    /* In case we're compiled without SSL support, we don't have this signal and we need to
+     * avoid getting a connection error. */
+    q->connect(reply, SIGNAL(sslErrors(QList<QSslError>)), SLOT(_q_replySslErrors(QList<QSslError>)));
+#endif
+
+    return reply;
+}
+简单来说就做了一件事情，把QNetworkReply的信号（finished、sslErrors）与QNetworkAccessManager的槽连接起来。 

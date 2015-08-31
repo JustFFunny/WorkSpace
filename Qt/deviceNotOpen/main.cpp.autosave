@@ -1,0 +1,26 @@
+/*
+ to vertify the info ""
+ * */
+#include <QCoreApplication>
+#include <QProcess>
+#include <QDebug>
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+    QProcess * _process=new QProcess();
+    _process->setProcessChannelMode(QProcess::MergedChannels);
+    QString _cmd("ls -l ");
+    _process->execute(_cmd);
+   // _process->start(_cmd);
+    _process->waitForFinished(-1);
+    QString _result=_process->readAll();
+    qDebug()<<"result:"<<_result;z
+/****************test2*****************/
+    //    QProcess proces;
+//    proces.setProcessChannelMode(QProcess::MergedChannels);
+//    proces.start(  "adb forward tcp:6101 tcp:7101");
+//    proces.waitForFinished(-1);
+//    QString tmp = proces.readAll();
+//    qDebug()<<"result:"<<tmp;
+    return a.exec();
+}

@@ -1,0 +1,308 @@
+mvc是经典的三层结构，将数据，视图和逻辑分离。Qt中的Model/View框架，实现了这个模式。
+在Qt中这个模式设计到三个类，model类，view类和delegate类。model类保存数据，view复制显示，
+而delegate负责协调model和view之间的数据edit(编辑)和render(渲染)。
+
+                   
+这些在model子类中需要实现的方法可以分为三组。
+
+项数据绑定：所有的model需要实现方法使视图和代理能够查询model...
+
+Models能够提供各种程度的数据访问限制：read-only，resizing，edited
+
+
+Read-Only access 只读访问
+
+如果只读访问，只需要实现下面几个函数在继承的子类中
+
+Flags,其他的组件可以通过这个得知每个Item的信息，在大多数的models中，包含Qt::ItemIsEnable,Qt::ItemIsSelectable
+
+data,被用来提供数据给视图和代理，一般的，models只要提供Qt::DisplayRole和任何程序特殊的角色，也有一些特殊的Qt::ToolTipRole等，详细可以看Qt::ItemDataRole。
+
+headerData,为视图的头部提供信息数据。
+
+rowCount提供这个model有多少行数据。
+
+上述的四个函数在任何类型的model中都要实现，不管是QAbstractListModel还是QAbstractTableModel。另外，下面的函数必须被实现，在QAbstractTableModel和QAbstractItemModel中，columnCount。
+
+编辑项目
+
+可编辑的模型允许数据项被修改，和可以提供函数来插入数据在行和列。
+
+Flags,必须包含Qt::ItemDataRole。
+
+setData，被用来修改和特殊的模型索引相关的项目。修改的数据必须是Qt::EditRole，发送一个dataChanged信号。
+
+setHeaderData，用来修改水平和垂直的头信息，发出一个headerDataChanged信号。
+
+改变models的size
+
+所有类型的model能够提供插入和移除行。Table Model和分级的model也支持列的插入和删除操作。
+
+
+
+
+下面的例子是基于QAbstractListModel实现的一个QStringListModel
+
+
+[cpp] view plaincopyprint?
+/************************************************ 
+* 
+*author:周翔 
+*e-mail:604487178@qq.com 
+*blog:http://blog.csdn.net/zhx6044 
+* 
+* 
+*************************************************/  
+  
+#ifndef STRINGLISTMODEL_HPP   
+#define STRINGLISTMODEL_HPP   
+  
+#include <QAbstractListModel>   
+#include <QStringList>   
+  
+class StringListModel : public QAbstractListModel  
+{  
+    Q_OBJECT  
+public:  
+    explicit StringListModel( const QStringList &stringList, QObject *parent = 0);  
+    //重新实现的函数   
+    int rowCount(const QModelIndex &parent) const;  
+    QVariant data(const QModelIndex &index, int role) const;  
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;  
+    Qt::ItemFlags flags(const QModelIndex &index) const;  
+    bool setData(const QModelIndex &index, const QVariant &value, int role);  
+signals:  
+      
+public slots:  
+private:  
+    QStringList m_slist;//存放数据的容器   
+      
+};  
+  
+#endif // STRINGLISTMODEL_HPP   
+  
+/************************************************ 
+* 
+*author:周翔 
+*e-mail:604487178@qq.com 
+*blog:http://blog.csdn.net/zhx6044 
+* 
+* 
+*************************************************/  
+  
+#include "stringlistmodel.hpp"   
+#include <QDebug>   
+  
+StringListModel::StringListModel(const QStringList &stringList, QObject *parent) :  
+    QAbstractListModel(parent),  
+    m_slist(stringList)  
+{  
+}  
+/** 
+ * @brief StringListModel::rowCount model数据的行数 
+ * @return  
+ */  
+int StringListModel::rowCount(const QModelIndex &/*parent*/) const  
+{  
+    return m_slist.length();//就是链表的长度   
+}  
+/** 
+ * @brief StringListModel::data 获得对应index项的数据 
+ * @param index 
+ * @param role 数据的角色 
+ * @return  
+ */  
+QVariant StringListModel::data(const QModelIndex &index, int role) const  
+{  
+    if (!index.isValid()) {  
+        return QVariant();  
+    }  
+    //row从0开始，有效的范围为0～链表长度减1   
+    if (index.row() >= m_slist.length()) {  
+        return QVariant();  
+    }  
+    if (role == Qt::DisplayRole) {  
+        return m_slist.at(index.row());  
+    } else {  
+        return QVariant();  
+    }  
+}  
+  
+QVariant StringListModel::headerData(int section, Qt::Orientation orientation, int role) const  
+{  
+    if (role != Qt::DisplayRole) {  
+        return QVariant();  
+    }  
+    if (orientation == Qt::Horizontal) {  
+        return QString("col %1").arg(section);  
+    } else {  
+        return QString("row %1").arg(section);  
+    }  
+}  
+/** 
+ * @brief StringListModel::flags 被其他组件访问时获得每个Item的信息 
+ * @param index 
+ * @return  
+ */  
+Qt::ItemFlags StringListModel::flags(const QModelIndex &index) const  
+{  
+    if (!index.isValid()) {  
+        return Qt::ItemIsEnabled;  
+    }  
+    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;//可编辑的   
+}  
+/** 
+ * @brief StringListModel::setData 当视图的显示的数据被改变的时候，model也相应的改变 
+ * @param index 
+ * @param value 
+ * @param role 
+ * @return  
+ */  
+bool StringListModel::setData(const QModelIndex &index, const QVariant &value, int role)  
+{  
+    //这个index必须是有效的，必须还是可编辑的   
+    if (index.isValid() && role == Qt::EditRole) {  
+        m_slist.replace(index.row(),value.toString());  
+        emit dataChanged(index,index);//发出这个信号，外部使用这个信号没用   
+        return true;  
+    }  
+    return false;  
+  
+}  
+
+/************************************************
+*
+*author:周翔
+*e-mail:604487178@qq.com
+*blog:http://blog.csdn.net/zhx6044
+*
+*
+*************************************************/
+
+#ifndef STRINGLISTMODEL_HPP
+#define STRINGLISTMODEL_HPP
+
+#include <QAbstractListModel>
+#include <QStringList>
+
+class StringListModel : public QAbstractListModel
+{
+    Q_OBJECT
+public:
+    explicit StringListModel( const QStringList &stringList, QObject *parent = 0);
+    //重新实现的函数
+    int rowCount(const QModelIndex &parent) const;
+    QVariant data(const QModelIndex &index, int role) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role);
+signals:
+    
+public slots:
+private:
+    QStringList m_slist;//存放数据的容器
+    
+};
+
+#endif // STRINGLISTMODEL_HPP
+
+/************************************************
+*
+*author:周翔
+*e-mail:604487178@qq.com
+*blog:http://blog.csdn.net/zhx6044
+*
+*
+*************************************************/
+
+#include "stringlistmodel.hpp"
+#include <QDebug>
+
+StringListModel::StringListModel(const QStringList &stringList, QObject *parent) :
+    QAbstractListModel(parent),
+    m_slist(stringList)
+{
+}
+/**
+ * @brief StringListModel::rowCount model数据的行数
+ * @return 
+ */
+int StringListModel::rowCount(const QModelIndex &/*parent*/) const
+{
+    return m_slist.length();//就是链表的长度
+}
+/**
+ * @brief StringListModel::data 获得对应index项的数据
+ * @param index
+ * @param role 数据的角色
+ * @return 
+ */
+QVariant StringListModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid()) {
+        return QVariant();
+    }
+    //row从0开始，有效的范围为0～链表长度减1
+    if (index.row() >= m_slist.length()) {
+        return QVariant();
+    }
+    if (role == Qt::DisplayRole) {
+        return m_slist.at(index.row());
+    } else {
+        return QVariant();
+    }
+}
+
+QVariant StringListModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role != Qt::DisplayRole) {
+        return QVariant();
+    }
+    if (orientation == Qt::Horizontal) {
+        return QString("col %1").arg(section);
+    } else {
+        return QString("row %1").arg(section);
+    }
+}
+/**
+ * @brief StringListModel::flags 被其他组件访问时获得每个Item的信息
+ * @param index
+ * @return 
+ */
+Qt::ItemFlags StringListModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid()) {
+        return Qt::ItemIsEnabled;
+    }
+    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;//可编辑的
+}
+/**
+ * @brief StringListModel::setData 当视图的显示的数据被改变的时候，model也相应的改变
+ * @param index
+ * @param value
+ * @param role
+ * @return 
+ */
+bool StringListModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    //这个index必须是有效的，必须还是可编辑的
+    if (index.isValid() && role == Qt::EditRole) {
+        m_slist.replace(index.row(),value.toString());
+        emit dataChanged(index,index);//发出这个信号，外部使用这个信号没用
+        return true;
+    }
+    return false;
+
+}
+
+
+使用这个model类
+
+
+
+
+[cpp] view plaincopyprint?
+StringListModel *model = new StringListModel(QStringList() << "chenchen"  
+                                                 << "love"  
+                                                 << "zhou xiang",this);  
+    ui->listView->setModel(model);  

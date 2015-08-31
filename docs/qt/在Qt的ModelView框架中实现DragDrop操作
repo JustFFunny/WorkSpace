@@ -1,0 +1,44 @@
+
+在Qt的Model／View框架中实现Drag-Drop操作
+分类： QT 编程 2011-12-30 12:05 1015人阅读 评论(0) 收藏 举报
+qt框架文档
+
+    QT的Model／View结构为我们实现各种界面提供了很大的灵活性，同时也比较方便。在这个框架中也支持Drag and Drop的操作，需要实现QAbstractItemModel类的几个虚函数就可以，在QT文档的”Using Drag and Drop with Item Views“中又介绍，但似乎看起来不够明确，我根据自己的实际经验总结一下记录于此。
+
+    首先要给对应的View设置dragDropMode属性，根据实际情况可以是DragOnly, DropOnly, DragDrop, InternalMove几种，如果没有设置是无法实现DragDrop操作的。其次就是对相应的数据模型类（QAbstractItemModel继承类）实现相关的虚函数即可。
+
+    Drag and Drop操作实际上分两步，两步是单独实现的。
+
+一、Drag操作需要实现的方法：
+
+    1. 在flags函数中， 对允许执行Drag操作的项（item），需要返回 Qt::ItemIsDragEnabled属性，这样这些项目才可以被执行Drag操作；
+
+    2. 需要实现mimeData方法，将所执行Drag操作的数据打包，封装为一个数据对象（QMimeData）。这个对象由接收Drop操作的对象使用。
+
+二、Drop对象需要实现的方法：
+
+    1. 同样在flags函数中，对允许执行Drop操作的项，需要返回Qt::ItemIsDropEnabled属性。
+
+    2. 需要实现mimeTypes函数，这个函数要返回当前数据模型允许接收的数据类型列表，它会在Drag操作过程中被调用，如果Drag操作所包含的对象（第一部分中mimeData方法返回的数据对象）没有相关类型的数据，就不允许执行Drop操作。
+
+    3. 实现dropMimeData方法。这个方法主要在drop操作后解析数据并添加到当前模型的合适位置。
+
+    按照上述的方法就可以实现基本的Drag and Drop操作，当然还有其他一些更高级的功能，像dropActions，dragActions等等，就由您自己去探索发现吧。
+
+
+
+
+QMenuBar{
+/*background:white;*/
+}
+QMenuBar::item{
+/*background:white;*/
+
+border-right-width: 2px;
+border-right-color: gray;
+border-right-style: solid; /* just a single line */
+margin-top: 3px;
+margin-bottom:3px;
+padding-left: 8px;
+padding-right:8px
+}

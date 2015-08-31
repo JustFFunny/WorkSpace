@@ -1,0 +1,38 @@
+ http://www.cnblogs.com/emouse/archive/2013/05/03/3056431.html
+
+Qt 中显示中文
+
+在Qt中使用中文，按照网上的很多方法，Ubuntu中显示正常，但是移植到开发板上显示有问题，这里根据我的操作做个整理。
+
+显示中文主要是两点，一是编码，而是字体。
+
+关于编码网上查的资料各种说法都有，utf8 gbk gb2312的，我用的是utf8.
+
+开发板上必须也有对应的中文字体才能够显示中文，我这里在Ubuntu 12.04的安装目录中usr/share/fonts/truetype/wqy目录下，将这个拷贝到开发板Qt库中的字体库中，注意要将Qt的字体路径加入环境变量QT_QWS_FONTDIR=/opt/qt-4.8.4/lib/fonts
+
+
+
+最后，在主函数中加入代码即可：
+复制代码
+
+#include "widget.h"
+#include <QApplication>
+#include <QTextCodec>
+
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    QTextCodec *codec = QTextCodec::codecForName("utf8");
+    QTextCodec::setCodecForLocale(codec);
+    QTextCodec::setCodecForCStrings(codec);
+    QTextCodec::setCodecForTr(codec);
+    QFont font;
+    font.setFamily(("wqy-microhei"));
+    Widget w;
+    w.setWindowFlags(Qt::FramelessWindowHint);
+
+    w.show();
+    
+    return a.exec();
+}
+

@@ -1,0 +1,168 @@
+五、我们来解析几个小程序，应用我们学到的知识！
+1、analog Clock
+这个程序，用到了一个事件函数paintEvent实现不断的重绘窗体，这里也用到了QTime
+示例3：模拟时钟
+【1】新建一个空工程ClockWidget，添加main.cpp文件，添加一个类ClockWidget，base class填QWidget，构造函数类型填Inherits QWidget。
+【2】添加main.cpp文件代码如下：
+#include <QApplication>
+#include "clockwidget.h"
+
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+    ClockWidget clock;
+    clock.show();
+    return app.exec();
+}
+【3】在clockwidget.h文件中，添加受保护成员函数声明：
+protected：
+    void paintEvent(QPaintEvent *event);
+并在clockwidget.cpp文件中定义该函数，代码如下：
+//画指针所需的三点
+        static const QPoint hourHand[3] = {
+            QPoint(7, 8),
+            QPoint(-7, 8),
+            QPoint(0, -40)
+        };
+        static const QPoint minuteHand[3] = {
+            QPoint(7, 8),
+            QPoint(-7, 8),
+            QPoint(0, -70)
+        };
+    //设置时针分针的GBR颜色
+        QColor hourColor(127, 0, 127);
+        QColor minuteColor(0, 127, 127, 191);
+    //qMin函数，为Qt全局函数，统一高宽一样，以最小的为准!
+        int side = qMin(width(), height());
+    //设置时间为当前时间
+        QTime time = QTime::currentTime();
+    //开始画时针
+        QPainter painter(this);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.translate(width() / 2, height() / 2);
+        painter.scale(side / 200.0, side / 200.0);
+
+        painter.setPen(Qt::NoPen);
+
+        painter.setBrush(hourColor);
+
+        painter.save();
+        painter.rotate(30.0 * ((time.hour() + time.minute() / 60.0)));
+        painter.drawConvexPolygon(hourHand, 3);
+    //开始画时针直线       
+        painter.restore();
+
+        painter.setPen(hourColor);
+
+   
+        for (int i = 0; i < 12; ++i) {
+            painter.drawLine(88, 0, 96, 0);
+            painter.rotate(30.0);
+        }
+    //开始画分针
+        painter.setPen(Qt::NoPen);
+
+        painter.setBrush(minuteColor);
+
+        painter.save();
+        painter.rotate(6.0 * (time.minute() + time.second() / 60.0));
+        painter.drawConvexPolygon(minuteHand, 3);
+    //开始画分针直线
+        painter.restore();
+
+        painter.setPen(minuteColor);
+
+        for (int j = 0; j < 60; ++j) {
+            if ((j % 5) != 0)
+                painter.drawLine(92, 0, 96, 0);
+            painter.rotate(6.0);
+【4】添加构造函数代码：
+ QTimer *timer = new QTimer(this);
+         connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+         timer->start(1000);
+
+     setWindowIcon(QIcon(":/images/clock.png"));
+         setWindowTitle(tr("Analog Clock"));
+         resize(200, 200);
+记得添加头文件：
+#include <QPainter>
+#include <QPoint>
+#include <QTime>
+#include <QPaintEvent>
+#include <QColor>
+#include <QTimer>
+#include <QIcon>
+
+2、shaped clock
+示例4：成型的时钟
+我们在前一个程序的基础上进行修改：
+【1】在clockwidget.h文件中，添加
+私有成员变量：
+private:
+    QPoint dragPosition;
+私有事件函数：
+    void mouseMoveEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void resizeEvent(QResizeEvent *event);
+公有成员函数：
+    QSize sizeHint() const;
+【2】添加三个事件函数定义的代码：
+void ClockWidget::resizeEvent(QResizeEvent * )
+{
+    int side = qMin(width(), height());
+    QRegion maskedRegion(width() / 2 - side / 2, height() / 2 - side / 2, side,
+                         side, QRegion::Ellipse);
+    setMask(maskedRegion);
+}
+
+QSize ClockWidget::sizeHint() const
+{
+    return QSize(100, 100);
+}
+void ShapedClock::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        dragPosition = event->globalPos() - frameGeometry().topLeft();
+        event->accept();
+    }
+}
+
+void ShapedClock::mouseMoveEvent(QMouseEvent *event)
+{
+    if (event->buttons() & Qt::LeftButton) {
+        move(event->globalPos() - dragPosition);
+        event->accept();
+    }
+}
+【3】添加构造函数后代码为：
+ClockWidget::ClockWidget(QWidget *parent) :
+    QWidget(parent, Qt::FramelessWindowHint | Qt::WindowSystemMenuHint| Qt::WindowStaysOnTopHint)
+{
+    QTimer *timer = new QTimer(this);
+        connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+        timer->start(1000);
+
+    QAction *quitAction = new QAction(tr("E&xit"), this);
+    quitAction->setShortcut(tr("Ctrl+Q"));
+    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+            addAction(quitAction);
+
+    setContextMenuPolicy(Qt::ActionsContextMenu);//设置环境菜单项
+    setToolTip(tr("Drag the clock with the left mouse button.\n"
+                "Use the right mouse button to open a context menu."));
+
+    setWindowIcon(QIcon(":/images/clock.png"));
+    setWindowTitle(tr("Analog Clock"));
+}
+这里我们去掉了代码
+resize(200, 200);
+设置了一个环境菜单（浮现）和一个鼠标右击菜单（以便退出）。
+我们设置大小用到另外一个，QWidget类的一个公有成员函数
+QSize sizeHint() const;
+定义的代码如下：
+QSize ClockWidget::sizeHint() const
+{
+    return QSize(100, 100);
+}
+
+这几个例子，我们不仅用到了以前，用到过的知识，也用到了事件处理方面的知识，我们会在后面接着研究事件处理！

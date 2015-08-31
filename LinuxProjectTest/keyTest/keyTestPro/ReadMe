@@ -1,0 +1,6 @@
+/*notes:
+  1.根据的原型是:echo rootkey | sudo -S  keyTest  rootkey
+  2.单独测试的时候,执行 keyTest rootkey   ,注意keyTest是ROOT用户编译
+  3..pro中密码相关的链接库添加 : LIBS  +=  -lcrypt
+*/
+

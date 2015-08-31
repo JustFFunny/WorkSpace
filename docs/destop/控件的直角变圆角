@@ -1,0 +1,81 @@
+1.
+为dialog背景增加一个widget或者frame，为些widget增加一个border-image: url(:/xx.png);再以xx.png为基础画一个mask图。
+在构造函数中设置setMask(QBitmap(tr(":/xx_mask.png"));就可以了。
+
+2.//使用QSS
+但是继承基类的Qwidget，设置qss不起作用
+只要重写即可
+#include <QStyleOption>
+#include <QPainter>
+ void CCustomWidget::paintEvent(QPaintEvent*)
+
+    {
+
+    QStyleOption opt;
+
+    opt.init(this);
+
+    QPainter p(this);
+
+    style()->drawPrimitive(QStyle：:PE_Widget, &opt, &p, this);
+
+    }
+//另外的一个实现： QtextEdit  获得焦点。以后发送------主要是用来实现QtextEdit 刚开始有我脑文字是灰色的，当获得焦点以后 文字消失
+      实现了QLineEdit获得焦点高亮显示与失去焦点恢复原样的操作，是通过重新继承该类，再重构该事件函数的方式。
+
+
+
+
+
+
+3.想设计出一个类似QQ气泡聊天的样式 
+使用了几种办法
+http://www.oschina.net/question/819339_159507?sort=time
+1：使用Qt下面的QListview来实现QQ类似效果，差强人意
+
+2：使用QWebview加载html css样式来完成，发现效果不错，但是毕竟webview占用巨大的内存
+
+3：使用QTextBrower加载css，但是好像只支持css2.1版本，css3完全不支持，这样的话，花哨的样式应该是无法实现
+
+基于以上三种思路
+
+    最后发现还是QML实现比较好，但是qml基于文本与动画图片混合显示没找到好的办法，有好的办法的希望可以给指点一二
+
+目前写了第一种办法的效果，但是delegate没法实现文本复制等操作，可能会放弃之
+
+
+
+
+
+
+//Qpaint  //画三角形
+void TextBalloon::paint(QPainter *painter)
+{
+QBrush brush(QColor("#007430"));
+
+painter->setBrush(brush);
+painter->setPen(Qt::NoPen);
+painter->setRenderHint(QPainter::Antialiasing);
+
+painter->drawRoundedRect(0, 0, boundingRect().width(), boundingRect().height() - 10, 10, 10);
+
+if (rightAligned)
+{
+const QPointF points[3] = {
+QPointF(boundingRect().width() - 10.0, boundingRect().height() - 10.0),
+QPointF(boundingRect().width() - 20.0, boundingRect().height()),
+QPointF(boundingRect().width() - 30.0, boundingRect().height() - 10.0),
+};
+painter->drawConvexPolygon(points, 3);
+}
+else
+{
+const QPointF points[3] = {
+QPointF(10.0, boundingRect().height() - 10.0),
+QPointF(20.0, boundingRect().height()),
+QPointF(30.0, boundingRect().height() - 10.0),
+};
+painter->drawConvexPolygon(points, 3);
+}
+}
+

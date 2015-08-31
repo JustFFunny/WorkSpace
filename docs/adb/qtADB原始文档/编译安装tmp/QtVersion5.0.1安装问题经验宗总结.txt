@@ -1,0 +1,56 @@
+
+
+安装:
+
+root@user:  chmod +x qt-linux-opensource-5.0.1-x86_64-offline.run
+
+运行: ./qt-linux-opensource-5.0.1-x86_64-offline.run
+
+ 
+
+出现的问题：
+
+:cannot find -lgl
+
+安装：
+
+apt-get install libgl1-mesa-dev
+
+ 
+
+构建套件中找不到编译器：
+
+手动添加编译器，找到gcc安装地址。然后添加。
+
+ 
+
+找不到G++：
+
+安装好了GCC，记得把G++也安装上，
+
+很简单,
+
+apt-get install g++
+
+ 
+
+记得设置QT的环境变量。。
+
+在/etc/bash.bashrc里添加
+
+ 
+
+export QTDIR=/home/user/Qt5/5.0.1/gcc_64
+
+export PATH=$QTDIR/bin:$PATH
+
+export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY
+
+ 
+
+完了运行source /etc/bash.bashrc使环境变量生效。
+
+ 
+
+编译调试通过。安装过程总共遇到这些问题。
+
