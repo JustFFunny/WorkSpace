@@ -1,6 +1,0 @@
-int f;
-#ifdef SLOW
-    f =10;   // 摒弃的代码
-#else
-    f=11;    //正在使用的代码
-#endif
