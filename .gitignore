@@ -11,6 +11,15 @@ build-insert_sort-Desktop-Debug/
 *.opensdf
 *.suo
 *.vcxproj.user
+*.tlog
+*.idb
+*.pdb
+*.manifest
+*.vcxproj.filters
+*.log
+*.ilk
+*.lastbuildstate
+*.obj
 ipch
 #Python object file  orCompiled python file/library
 *pyo
