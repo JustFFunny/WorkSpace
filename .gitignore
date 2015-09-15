@@ -3,5 +3,17 @@ insert_sort/insert_sort.pro.user
 insert_sort/insert_sort.pro.user.0000000
 build-insert_sort-Desktop-Debug/
 *-Desktop-*/
+#QTcreator privateuser setting file
 *.pro.user
 #aaa
+#C++Project ignore the following files:
+*.sdf
+*.opensdf
+*.suo
+*.vcxproj.user
+ipch
+#Python object file  orCompiled python file/library
+*pyo
+*pyc
+
+#of course ,you can add more file type for the ignore.
