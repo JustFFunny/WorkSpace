@@ -1,0 +1,18 @@
+/*本文档的作用是：同过滚动条进行设置，页面的滚动。tableview和tableWidget在当前的可视窗口的第一行显示。
+  主要用到一下几个函数：
+       QTableView：：verticalScrollBar()->setSliderPosition()；  //设置当前滑动条的位置
+       QTableView：：verticalScrollBar()->maximum();             //滑动条能移动的最大位置
+       QTableView：：verticalScrollBar()->value();               //获得当前滑动条的位置 
+另外需要注意的有一下内容：
+就是在构造函数中使用以上函数，获得的值都是0;
+所以我们应该在槽函数中进行查看正确。
+
+void Contactwidget::nextPage()
+{
+    qDebug()<<m_tableView->verticalScrollBar()->value();//0
+    qDebug()<<m_tableView->verticalScrollBar()->maximum();
+    m_tableView->verticalScrollBar()->setValue(19);
+}
+
+如果需要的话，可以查看笔记，或者网上搜索 pangeNext翻页的实现。
+*/
