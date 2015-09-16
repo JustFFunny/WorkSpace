@@ -1,0 +1,94 @@
+/*信号转发器;the class collect signals,and re-emits them with integer,string or widget or object.
+*/
+void Contactwidget::createButtonConnect()
+{
+    m_signalMapper=new QSignalMapper;
+    ui->pushButton_A;
+    ui->pushButton_B;
+    connect(ui->pushButton_A,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_B,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_C,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_D,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_E,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_F,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_G,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_H,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_I,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_J,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_K,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_L,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_M,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_N,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_O,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_P,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_Q,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_R,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_S,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_T,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_U,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_V,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_W,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_X,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_Y,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_Z,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    connect(ui->pushButton_end,SIGNAL(clicked()),m_signalMapper,SLOT(map()));
+    m_signalMapper->setMapping(ui->pushButton_A,ui->pushButton_A->text());
+    m_signalMapper->setMapping(ui->pushButton_B,ui->pushButton_B->text());
+    m_signalMapper->setMapping(ui->pushButton_C,ui->pushButton_C->text());
+    m_signalMapper->setMapping(ui->pushButton_D,ui->pushButton_D->text());
+    m_signalMapper->setMapping(ui->pushButton_E,ui->pushButton_E->text());
+    m_signalMapper->setMapping(ui->pushButton_F,ui->pushButton_F->text());
+    m_signalMapper->setMapping(ui->pushButton_G,ui->pushButton_G->text());
+    m_signalMapper->setMapping(ui->pushButton_H,ui->pushButton_H->text());
+    m_signalMapper->setMapping(ui->pushButton_I,ui->pushButton_I->text());
+    m_signalMapper->setMapping(ui->pushButton_J,ui->pushButton_J->text());
+    m_signalMapper->setMapping(ui->pushButton_K,ui->pushButton_K->text());
+    m_signalMapper->setMapping(ui->pushButton_L,ui->pushButton_L->text());
+    m_signalMapper->setMapping(ui->pushButton_M,ui->pushButton_M->text());
+    m_signalMapper->setMapping(ui->pushButton_N,ui->pushButton_N->text());
+    m_signalMapper->setMapping(ui->pushButton_O,ui->pushButton_O->text());
+    m_signalMapper->setMapping(ui->pushButton_P,ui->pushButton_P->text());
+    m_signalMapper->setMapping(ui->pushButton_Q,ui->pushButton_Q->text());
+    m_signalMapper->setMapping(ui->pushButton_R,ui->pushButton_R->text());
+    m_signalMapper->setMapping(ui->pushButton_S,ui->pushButton_S->text());
+    m_signalMapper->setMapping(ui->pushButton_T,ui->pushButton_T->text());
+    m_signalMapper->setMapping(ui->pushButton_U,ui->pushButton_U->text());
+    m_signalMapper->setMapping(ui->pushButton_V,ui->pushButton_V->text());
+    m_signalMapper->setMapping(ui->pushButton_W,ui->pushButton_W->text());
+    m_signalMapper->setMapping(ui->pushButton_X,ui->pushButton_X->text());
+    m_signalMapper->setMapping(ui->pushButton_Y,ui->pushButton_Y->text());
+    m_signalMapper->setMapping(ui->pushButton_Z,ui->pushButton_Z->text());
+    m_signalMapper->setMapping(ui->pushButton_end,"#");
+
+    connect(m_signalMapper,SIGNAL(mapped(QString)),this,SLOT(buttonsSlot(QString)));
+
+
+}
+
+
+
+
+
+
+
+
+void Contactwidget::buttonsSlot(QString _alphabetStr)
+{
+    int _curRow=0;
+    if(_alphabetStr== "#")
+    {
+        qDebug()<<"hello";
+        qDebug()<<"min"<<m_tableView->verticalScrollBar()->minimum();
+        qDebug()<<"max"<<m_tableView->verticalScrollBar()->maximum();
+        _curRow=m_tableView->verticalScrollBar()->maximum();
+    }
+    else
+    {
+        _curRow=m_contactModel->findTheFirstRow(_alphabetStr);
+    }
+    qDebug()<<"row"<<_curRow;
+    if(_curRow != -1)
+    {
+        m_tableView->verticalScrollBar()->setValue(_curRow);
+    }
+}
