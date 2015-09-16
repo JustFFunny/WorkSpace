@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>pics/bgPortrait.jpg</file>
+        <file>pics/bgLandscape.jpg</file>
+        <file>pics/background.png</file>
+        <file>qss/stylesheetDemo.qss</file>
+        <file>pics/wood.jpg</file>
+        <file>pics/button.png</file>
+        <file>pics/button-pressed.png</file>
+        <file>pics/radioButton.png</file>
+        <file>pics/checkbox.gif</file>
+    </qresource>
+</RCC>
