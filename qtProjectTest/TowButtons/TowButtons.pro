@@ -16,10 +16,15 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     buttondelegate.cpp \
     tablemodel.cpp \
-    tableview.cpp
+    tableview.cpp \
+    icondelegate.cpp
 
 HEADERS  += mainwindow.h \
     buttondelegate.h \
     tablemodel.h \
-    tableview.h
+    tableview.h \
+    icondelegate.h
+
+RESOURCES += \
+    res.qrc
 

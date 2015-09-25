@@ -2,6 +2,8 @@
 #define TABLEMODEL_H
 
 #include <QAbstractTableModel>
+#include <QStringList>
+#include <QVector>
 
 class TableModel : public QAbstractTableModel
 {

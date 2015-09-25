@@ -18,7 +18,8 @@ int TableModel::rowCount(const QModelIndex &parent) const
 
 int TableModel::columnCount(const QModelIndex &parent) const
 {
-    return m_HorizontalHeader.count();
+   return m_HorizontalHeader.count();
+     //return 3;
 }
 
 QVariant TableModel::data(const QModelIndex &index, int role) const

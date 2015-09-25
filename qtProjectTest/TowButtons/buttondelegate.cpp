@@ -6,6 +6,8 @@
 #include <QPainter>
 #include <QStyleOption>
 #include <QDesktopWidget>
+#include <QIcon>
+#include <QPixmap>
 
 ButtonDelegate::ButtonDelegate(QObject *parent) :
     QItemDelegate(parent)
@@ -19,7 +21,8 @@ void ButtonDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option
     if (!buttons) {
         QStyleOptionButton* button1 = new QStyleOptionButton();
         //button1->rect = option.rect.adjusted(4, 4, -(option.rect.width() / 2 + 4) , -4); //
-        button1->text = "X";
+        //button1->text = "X";
+       // button1->icon=QIcon(":/icon/icon/video_select.png");//.scaled(50,50);
         button1->state |= QStyle::State_Enabled;
 
         QStyleOptionButton* button2 = new QStyleOptionButton();
@@ -33,12 +36,21 @@ void ButtonDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option
     buttons->second->rect = option.rect.adjusted(buttons->first->rect.width() + 4, 4, -4, -4);
     painter->save();
 
-    if (option.state & QStyle::State_Selected) {
+    if (option.state & QStyle::State_Selected)
+    {
         painter->fillRect(option.rect, option.palette.highlight());
-
     }
     painter->restore();
     QApplication::style()->drawControl(QStyle::CE_PushButton, buttons->first, painter);
+    /*virtual void drawControl(ControlElement element, const QStyleOption *opt, QPainter *p,
+                             const QWidget *w = 0) const = 0;
+     *
+     *   virtual void drawItemPixmap(QPainter *painter, const QRect &rect,
+                                int alignment, const QPixmap &pixmap) const;
+     */
+    //test
+    QApplication::style()->drawItemPixmap(painter,option.rect,Qt::AlignCenter,QPixmap(":/icon/icon/delete_icon.png"));
+
     QApplication::style()->drawControl(QStyle::CE_PushButton, buttons->second, painter);
 }
 
@@ -65,10 +77,12 @@ bool ButtonDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const
             QPair<QStyleOptionButton*, QStyleOptionButton*>* btns = m_btns.value(index);
             if (btns->first->rect.contains(e->x(), e->y())) {
                 btns->first->state &= (~QStyle::State_Sunken);
-                showMsg(tr("btn1 column %1").arg(index.column()));
+                //showMsg(tr("btn1 column %1").arg(index.column()));
+                 emit  rowSignal(index.row());
             } else if(btns->second->rect.contains(e->x(), e->y())) {
                 btns->second->state &= (~QStyle::State_Sunken);
-                showMsg(tr("btn2 row %1").arg(index.row()));
+               // showMsg(tr("btn2 row %1").arg(index.row()));
+               emit  rowSignal(index.row());
             }
         }
     }

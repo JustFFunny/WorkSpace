@@ -12,7 +12,7 @@ public:
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index);
 
 signals:
-
+  void rowSignal(int);
 public slots:
 
 private:

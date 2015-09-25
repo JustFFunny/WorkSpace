@@ -17,6 +17,8 @@ public:
 signals:
 
 public slots:
+    void  showRow(int);
+    void showQModeindex(const QModelIndex& index);
 
 private:
     void iniData();

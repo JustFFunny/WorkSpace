@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file>icon/delete_icon.png</file>
+        <file>icon/video_select.png</file>
+    </qresource>
+</RCC>
