@@ -1,0 +1,19 @@
+1.s首先我们应该明确是翻译件。
+
+步骤：
+1.Qobject::tr("EngLish");
+
+2.在。project.pro中加上 TRANSLATIONS+=namePro.ts;
+以生成namePro.ts件，
+
+3.用qlinguist打开namePro.ts,进行翻译件，然后发布生成namePro.qm件，
+
+4.QTranslate translate; translate.load("namePro.qm");
+a .installTranslate(&translate);//整个应用使用这个汉语的翻译包
+
+
+
+另外需要注意的以下问题：常见；
+就是在安装了 源码包已经发布（编译好的qt_zh_cn.qm)的中汉化包，仍然部分是英语，就必须在源码部分重新进行编译汉化包，或者重新发布缺失的汉语包，应用程序进行加载。
+eg:QLineEdit QtextEdit
+在加载了qt_zh_cn.qm以后，qlineEdit右键菜单的英语已经汉化，而QtextEdit的右键菜单没有汉化，是因为qt_zh_cn.qm中汉化不全导致的。
