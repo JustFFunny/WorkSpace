@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/image">
+        <file>contact_layout2.png</file>
+        <file>1_qwer_boo.jpg.png</file>
+    </qresource>
+</RCC>
