@@ -14,7 +14,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    
+    QPixmap PixmapToRound(const QPixmap &src, int radius);
 private:
     Ui::MainWindow *ui;
 };
