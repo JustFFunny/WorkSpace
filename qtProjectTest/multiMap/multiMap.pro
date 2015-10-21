@@ -14,9 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    exercisewidget.cpp
+    exercisewidget.cpp \
+    testwidget.cpp
 
 HEADERS  += mainwindow.h \
-    exercisewidget.h
+    exercisewidget.h \
+    testwidget.h
 
 FORMS    += mainwindow.ui

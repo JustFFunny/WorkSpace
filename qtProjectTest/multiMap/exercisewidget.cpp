@@ -1,10 +1,9 @@
-/*Attention:关于每条短信最后一个汉字为什么添加"完"的解释.
- *@作者：wuqiankun
- *@mail:qiankun@nfs-china.com
-*测试结果如下:
-*QLabel在中文的时候才自动换行,(全部是字母或者数字的时候不自动换行)
-*所有我为类防止 短信信息全部是中文把最后一个设置为汉字"完",
-*就可以自动换行l.
+/*
+ *void setWordWrap ( bool on )
+ *If this property is true then label text is wrapped
+ *where necessary at word-breaks; otherwise it is not wrapped at all.
+ *所以跟我们认为的自动换行 是不一样的.
+ *
 **/
 #include "exercisewidget.h"
 #include <QHBoxLayout>

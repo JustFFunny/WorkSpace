@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QVector>
 #include <QLabel>
+#include "testwidget.h"
 typedef QString II;
 class Stu
 {
@@ -23,11 +24,26 @@ private:
 };
 
 #include "exercisewidget.h"
+
+void sleep(int secs)
+{
+    QTime dieTime = QTime::currentTime().addMSecs(secs);
+
+    while( QTime::currentTime() < dieTime )
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
+}
+
+
+void autoAdjustHeight(QTextEdit *_edit)
+{
+    _edit->setFixedHeight(_edit->document()->size().rheight() + _edit->frameWidth() * 2);
+}
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
-    w.show();
+   // w.show();
     /*
     QMultiMap<QString,Stu> map;
     Stu _stu(1,"n");
@@ -70,8 +86,29 @@ int main(int argc, char *argv[])
 
 //    label->show();
 
-    ExerciseWidget ew;
-    ew.show();
+//    ExerciseWidget ew;
+//    ew.show();
+    QString str("你好");
+    QString str2("nihao");
+    qDebug()<<str.length()<<"___"<<str2.length();//2 ____5
+
+    TestWidget *tw = new TestWidget;
+   // tw->show();
+
+//    tw->testEdit->setText("one line");
+//    tw->autoAdjustHeight();
+//    sleep(1000);
+//    tw->testEdit->setText("two line\r\ntwo line");
+//    tw->autoAdjustHeight();
+//    sleep(1000);
+    tw->testEdit->setText("threelinethreelinethreelinegddddddddddddddddfffffffffffffffffffffffffffffffffffffffffffffffffb");
+    tw->autoAdjustHeight();
+
+    QTextEdit * _edit=new QTextEdit;
+    _edit->setMaximumWidth(100);
+    _edit->show();
+    _edit->setText("threelinethreelinethreelinegddddddddddddddddfffffffffffffffffffffffffffffffffffffffffffffffffb");
+    autoAdjustHeight(_edit);
 
     return a.exec();
 }
