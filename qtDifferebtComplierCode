@@ -1,0 +1,22 @@
+// linux OS
+#if defined(Q_OS_LINUX)
+//Start Coding......
+
+#endif
+
+//Windows OS
+#if defined(Q_OS_WIN)
+  //MinGW Complier
+  #if defined(__GNUC__)   || \
+      defined(__MINGW32_) || \
+      defined(__MINGW64_)
+//Start Coding......
+
+  #endif
+  //VS Complier
+  #if defined(_MSC_VER)
+//Start Coding......
+
+  #endif
+#endif
+
