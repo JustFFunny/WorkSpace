@@ -10,6 +10,12 @@
     <height>601</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>Loma</family>
+    <pointsize>20</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -104,8 +110,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QTextEdit" name="textEdit_2">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>430</y>
+      <x>210</x>
+      <y>220</y>
       <width>104</width>
       <height>84</height>
      </rect>
@@ -117,8 +123,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>300</y>
+      <x>70</x>
+      <y>220</y>
       <width>461</width>
       <height>84</height>
      </rect>
@@ -145,6 +151,82 @@ p, li { white-space: pre-wrap; }
      <string notr="true">background-color: rgb(255, 239, 199);</string>
     </property>
    </widget>
+   <widget class="QLineEdit" name="lineEdit">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>200</y>
+      <width>113</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit{  
+    text-align: center;  
+    color:red;  
+    background-color: transparent;  
+    border: 1px solid white;  
+    selection-color:yellow;  
+    selection-background-color:green;  
+}  </string>
+    </property>
+    <property name="text">
+     <string>sssssssss</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>400</y>
+      <width>321</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Loma</family>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>第二个</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>310</y>
+      <width>161</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(162, 255, 157);</string>
+    </property>
+    <property name="text">
+     <string>你好我好大费</string>
+    </property>
+   </widget>
+   <widget class="QFontComboBox" name="fontComboBox">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>340</y>
+      <width>188</width>
+      <height>25</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -152,7 +234,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>496</width>
-     <height>25</height>
+     <height>53</height>
     </rect>
    </property>
   </widget>

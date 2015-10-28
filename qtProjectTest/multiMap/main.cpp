@@ -6,6 +6,10 @@
 #include <QVector>
 #include <QLabel>
 #include "testwidget.h"
+
+#include <QTreeWidget>
+#include <QFontDatabase>
+
 typedef QString II;
 class Stu
 {
@@ -43,7 +47,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
-   // w.show();
+    w.show();
     /*
     QMultiMap<QString,Stu> map;
     Stu _stu(1,"n");
@@ -76,31 +80,31 @@ int main(int argc, char *argv[])
     typedef unsigned int UInt;
     qDebug()<<QString::number( int (~(UInt(-1)/2)) )<<"_________"<< QString::number( int (UInt(-1)/2) );
 
-//    QLabel *label =new QLabel;
-//    QString _str("qqqqqqqqqqqqqqqqqqqqqqqqp");
-//    label->setText(_str);
+    //    QLabel *label =new QLabel;
+    //    QString _str("qqqqqqqqqqqqqqqqqqqqqqqqp");
+    //    label->setText(_str);
 
-//    label->setMaximumWidth(100);
-//    label->adjustSize();
-//    label->setWordWrap(true);
+    //    label->setMaximumWidth(100);
+    //    label->adjustSize();
+    //    label->setWordWrap(true);
 
-//    label->show();
+    //    label->show();
 
-//    ExerciseWidget ew;
-//    ew.show();
+    //    ExerciseWidget ew;
+    //    ew.show();
     QString str("你好");
     QString str2("nihao");
     qDebug()<<str.length()<<"___"<<str2.length();//2 ____5
 
     TestWidget *tw = new TestWidget;
-   // tw->show();
+    // tw->show();
 
-//    tw->testEdit->setText("one line");
-//    tw->autoAdjustHeight();
-//    sleep(1000);
-//    tw->testEdit->setText("two line\r\ntwo line");
-//    tw->autoAdjustHeight();
-//    sleep(1000);
+    //    tw->testEdit->setText("one line");
+    //    tw->autoAdjustHeight();
+    //    sleep(1000);
+    //    tw->testEdit->setText("two line\r\ntwo line");
+    //    tw->autoAdjustHeight();
+    //    sleep(1000);
     tw->testEdit->setText("threelinethreelinethreelinegddddddddddddddddfffffffffffffffffffffffffffffffffffffffffffffffffb");
     tw->autoAdjustHeight();
 
@@ -110,5 +114,48 @@ int main(int argc, char *argv[])
     _edit->setText("threelinethreelinethreelinegddddddddddddddddfffffffffffffffffffffffffffffffffffffffffffffffffb");
     autoAdjustHeight(_edit);
 
+    qDebug()<<    isalpha('2');
+
+    QMap<QString ,QString> _mapTest;
+    _mapTest.insert("1","1111");
+    _mapTest.insert("2","2222");
+
+    QMap<QString ,QString>::iterator it=_mapTest.find("3");
+
+    if(it!=_mapTest.end())
+    {
+        qDebug()<<"key:"<<it.key();
+    }
+    else
+    {
+        qDebug()<<"Nokey";
+    }
+
+
+
+
+
+
+    QFontDatabase database;
+    QTreeWidget fontTree;
+    fontTree.setColumnCount(2);
+    fontTree.setHeaderLabels(QStringList() << "Font" << "Smooth Sizes");
+
+    foreach (const QString &family, database.families()) {
+        QTreeWidgetItem *familyItem = new QTreeWidgetItem(&fontTree);
+        familyItem->setText(0, family);
+
+        foreach (const QString &style, database.styles(family)) {
+            QTreeWidgetItem *styleItem = new QTreeWidgetItem(familyItem);
+            styleItem->setText(0, style);
+
+            QString sizes;
+            foreach (int points, database.smoothSizes(family, style))
+                sizes += QString::number(points) + " ";
+
+            styleItem->setText(1, sizes.trimmed());
+        }
+    }
+    fontTree.show();
     return a.exec();
 }
