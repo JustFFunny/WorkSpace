@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2015-10-19T09:40:54
+# Project created by QtCreator 2015-11-13T15:41:04
 #
 #-------------------------------------------------
 
@@ -8,20 +8,15 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = multiMap
+TARGET = testTextCustContext
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    exercisewidget.cpp \
-    testwidget.cpp
+    mytextedit.cpp
 
 HEADERS  += mainwindow.h \
-    exercisewidget.h \
-    testwidget.h
+    mytextedit.h
 
 FORMS    += mainwindow.ui
-
-RESOURCES += \
-    res.qrc

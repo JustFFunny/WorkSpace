@@ -177,8 +177,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>400</y>
+      <x>30</x>
+      <y>390</y>
       <width>321</width>
       <height>41</height>
      </rect>
@@ -225,6 +225,39 @@ p, li { white-space: pre-wrap; }
       <width>188</width>
       <height>25</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>50</y>
+      <width>61</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(208, 255, 158);
+border-image: url(:/res/sishen.gif);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>120</y>
+      <width>16</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 133, 182);</string>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>

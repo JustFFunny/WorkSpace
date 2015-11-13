@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/res">
+        <file>application_layout1.png</file>
+        <file>sishen.gif</file>
+    </qresource>
+</RCC>
