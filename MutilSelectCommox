@@ -1,0 +1,89 @@
+#ifndef QCOMBOXTEST_H 
+#define QCOMBOXTEST_H
+#include <QtGui/QMainWindow>
+#include "ui_qcomboxtest.h" 
+#include <vector>  
+using namespace std; 
+  class QComboxTest : public QMainWindow 
+    { 
+	Q_OBJECT 
+ public: 	
+        QComboxTest(QWidget *parent = 0, Qt::WFlags flags = 0); 
+	~QComboxTest(); 	 
+private Q_SLOTS:  
+void OnRadarChange(const QString &strText); 	
+	//pr protected: 	
+void keyPressEvent ( QKeyEvent * e ) ;  
+private: 	Ui::QComboxTestClass ui; 
+	vector<QString> vtCity;
+ };
+  #endif // QCOMBOXTEST_H 
+
+
+#include "qcomboxtest.h"
+#include "richCombox.h"
+ #include <vector> 
+#include <QLayout>
+ #include <QListWidget>
+ #include <QKeyEvent> 
+ using namespace std; 
+  QComboxTest::QComboxTest(QWidget *parent, Qt::WFlags flags) 
+	: QMainWindow(parent, flags) 
+     { 	ui.setupUi(this); 	
+         connect(ui.lineEdit,SIGNAL(textChanged (const QString & )),this,SLOT(OnRadarChange(const QString & ))); 
+	//connect(ui.comboBox,SIGNAL(editTextChanged (const QString & )),this,SLOT(OnRadarChange(const QString & ))); 	
+       //disconnect(ui.comboBox->view(),0,0,0);  
+	vtCity.push_back("beijing1"); 	vtCity.push_back("beijing2"); 	vtCity.push_back("beijing3"); 	vtCity.push_back("beijing4"); 
+	vtCity.push_back("beijing5"); 	vtCity.push_back("beijing6"); 	vtCity.push_back("beijing7"); 	vtCity.push_back("beijing8"); 
+	vtCity.push_back("beijing9"); 	vtCity.push_back("bengbu"); 	vtCity.push_back("baise"); 	vtCity.push_back("hailaer"); 
+	//ui.comboBox->setStyleSheet("QComboBox::drop-down{""border-style: none;}"); 
+	//ui.lineEdit->setFocusPolicy(Qt::NoFocus); 
+	//ui.comboBox->lineEdit()->setFocusPolicy(Qt::NoFocus);; 
+	//ui.comboBox->view()->setFocusPolicy(Qt::NoFocus);; 	 
+	QListWidget *pWidget = new QListWidget(); 	pWidget->addItem("123"); 	pWidget->addItem("123"); 
+	pWidget->addItem("123"); 	pWidget->addItem("123"); 
+	ui.listWidget->setVisible(false); 	
+          //ui.comboBox->setView(pWidget); 	//RichComboBox *ptestBox = new RichComboBox(); 	//ui.comboBox->layout()->addWidget(ptestBox); 	//ptestBox->addItem("hailaer");       } 
+      QComboxTest::~QComboxTest() {  } 
+      void QComboxTest::keyPressEvent (  QKeyEvent * keyevent ) 
+         { 	
+        	if(QApplication::focusWidget() != ui.lineEdit || ui.listWidget->count() == 0)
+                  return; 
+        	int uKey = keyevent->key(); 
+        	Qt::Key key = static_cast<Qt::Key>(uKey); 
+         	int iIndex = ui.listWidget->currentRow (); 	
+                if(key == Qt::Key_Up) 
+           	{ 	
+                	iIndex--; 	
+                	if(iIndex < 0) iIndex = 0; 	
+                	QListWidgetItem *pItem = ui.listWidget->item(iIndex); 		
+                         pItem->setForeground(Qt::red); 	
+                     	ui.listWidget->setCurrentItem(pItem); 		 
+         	} 
+          	else if (key == Qt::Key_Down) 
+           	{ 
+          		iIndex++; 	
+                	if(iIndex >= ui.listWidget->count()) iIndex = ui.listWidget->count() - 1; 	
+                    	QListWidgetItem *pItem = ui.listWidget->item(iIndex); 	
+                     	ui.listWidget->setCurrentItem(pItem); 
+	        } 	
+               else if (key == Qt::Key_Enter || key == Qt::Key_Return) 	
+                { 		
+                  ui.lineEdit->setText(ui.listWidget->currentItem()->text());
+         	}
+        }
+
+ 
+      void QComboxTest::OnRadarChange(const QString &strText)  
+             {
+        	//disconnect(ui.comboBox,SIGNAL(editTextChanged (const QString & )),this,SLOT(OnRadarChange(const QString & ))); 
+        	ui.listWidget->clear(); 
+            	for(int i = 0;i < vtCity.size();++i)
+                {
+  	        	if (vtCity[i].indexOf(strText) != -1) 	
+            		{ 
+ 			 ui.listWidget->addItem(vtCity[i]); 	
+                    	} 
+         	} 	
+             if (ui.listWidget->count() > 0) 
+            	:{ 		ui.listWidget->setVisible(true); 	} 	//connect(ui.comboBox,SIGNAL(editTextChanged (const QString & )),this,SLOT(OnRadarChange(const QString & ))); }
