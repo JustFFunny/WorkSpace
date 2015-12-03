@@ -1,0 +1,50 @@
+http://stackoverflow.com/questions/2599423/how-can-i-post-data-to-a-url-using-qnetworkaccessmanager
+
+
+
+
+//怎样传递 how can I format this array in order to be parsed correctly at the other end
+
+
+
+ you should rather use QUrl (for Qt 4) or QUrlQuery (for Qt 5) to build the posted string.
+Starting with Qt 4.8 you can also use QHttpMultiPart if you need to upload files. 
+
+//QT4
+
+
+QUrl postData;
+postData.addQueryItem("param1", "string");
+postData.addQueryItem("param2", "string");
+...
+QNetworkRequest request(serviceUrl);    
+request.setHeader(QNetworkRequest::ContentTypeHeader, 
+    "application/x-www-form-urlencoded");
+networkManager->post(request, postData.encodedQuery());
+
+
+
+
+//QT5
+// Setup the webservice url
+QUrl serviceUrl = QUrl("http://your.url");
+QByteArray postData;
+
+QUrl params;
+QUrlQuery query;
+query.addQueryItem("param1","string1");
+query.addQueryItem("param2","string2");
+
+params.setQuery(query);
+
+postData = params.toEncoded(QUrl::RemoveFragment);
+
+// Call the webservice
+QNetworkAccessManager *networkManager = new QNetworkAccessManager(this);
+connect(networkManager, SIGNAL(finished(QNetworkReply*)),
+        SLOT(onPostAnswer(QNetworkReply*)));
+
+QNetworkRequest networkRequest(serviceUrl);
+networkRequest.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
+
+networkManager->post(networkRequest,postData);

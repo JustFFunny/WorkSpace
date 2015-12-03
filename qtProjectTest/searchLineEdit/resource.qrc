@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/res">
+        <file alias="1">90%.png</file>
+        <file alias="2">80%.png</file>
+        <file alias="3">60%.png</file>
+        <file alias="4">40%.png</file>
+        <file alias="5">20%.png</file>
+    </qresource>
+</RCC>

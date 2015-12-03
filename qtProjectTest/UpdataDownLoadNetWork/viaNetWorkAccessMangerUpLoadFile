@@ -1,0 +1,45 @@
+  class Uploader: public QObject
+{
+    Q_OBJECT
+public:
+    Uploader(QObject *p = 0): QObject(p)     {  }
+
+    void fileupload(const QString &file)  //OK NO PROBLEM
+    {
+        QFileInfo finfo(file);
+        QUrl url("ftp://www.website.com/"+finfo.fileName());
+        url.setUserName("username");
+        url.setPassword("pass");
+
+        data = new QFile(file, this);
+        if (data->open(QIODevice::ReadOnly)) {
+            reply = nam.put(QNetworkRequest(url), data);
+            connect(reply, SIGNAL(uploadProgress(qint64, qint64)), SLOT(uploadProgress(qint64, qint64)));
+            connect(reply, SIGNAL(finished()), SLOT(uploadDone()));
+        }
+        else
+            qDebug() << "Oops";
+    }
+
+    void deletefile(QUrl ftpUrl)       //向服务器发送一个请求
+   {
+       HOW CODE  ????????
+   }
+
+
+public slots:
+    void uploadProgress(qint64 bytesSent, qint64 bytesTotal)    {
+        qDebug() << "Uploaded" << bytesSent << "of" << bytesTotal;
+    }
+
+    void uploadDone()     {
+        qDebug() << "Finished" << reply->error();
+        data->deleteLater();
+        reply->deleteLater();
+    }
+
+private:
+    QNetworkAccessManager nam;
+    QFile *data;
+    QNetworkReply *reply;
+};

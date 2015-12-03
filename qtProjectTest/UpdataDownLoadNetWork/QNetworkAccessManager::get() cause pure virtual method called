@@ -1,0 +1,135 @@
+//http://stackoverflow.com/questions/10974247/qnetworkaccessmanagerget-cause-pure-virtual-method-called
+QNetworkAccessManager::get() cause pure virtual method called
+up vote 1 down vote favorite
+	
+
+I'm trying download web page with QNetworkAccessManager::get() with a separate thread, When I running the program it will crash random (may be one hour or two hours). The code example:
+
+class SpiderThread : public QThread
+{   
+    Q_OBJECT
+public:
+    SpiderThread();
+    void    run();
+private:
+    bool    _stopped;
+}; 
+
+void SpiderThread::run()
+{
+    while (!_stopped) {
+        DownloadManager downloadManager();
+        QUrl u = getOneUrl();
+        QString content = downloadManager.getContent(u);
+        // some other code
+    }
+}
+
+
+QString DownloadManager::getContent(const QUrl &url)
+{
+    QEventLoop  loop;
+    QNetworkAccessManager manager;
+
+    QNetworkRequest request(url);
+    request.setRawHeader("User-Agent", _userAgent.toAscii());
+    QNetworkReply *reply = manager.get(request);
+    connect(reply, SIGNAL(finished()),
+            SLOT(replyFinished()));
+    connect(reply, SIGNAL(finished()),
+            &loop, SLOT(quit()));
+
+    loop.exec();
+    if (reply->error() != QNetworkReply::NoError) {
+        if (reply->isRunning())
+            reply->abort();
+        reply->deleteLater();
+        return QString();
+    }
+
+
+    int httpCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+    if (httpCode != 200)
+        return QString();
+    QByteArray data = reply->readAll();
+    reply->deleteLater();
+    return QString(data);
+}
+
+I'm using QEventloop to block the http request until it finshed, When I run these code, It always crash and show error message:
+
+    pure virtual method called
+    terminate called without an active exception
+
+the gdb debug info:
+
+    (gdb) bt
+    #0  0x0000003c0dc30285 in raise () from /lib64/libc.so.6
+    #1  0x0000003c0dc31d30 in abort () from /lib64/libc.so.6
+    #2  0x0000003d992bed94 in __gnu_cxx::__verbose_terminate_handler() () from /usr/lib64/libstdc++.so.6
+    #3  0x0000003d992bce46 in ?? () from /usr/lib64/libstdc++.so.6
+    #4  0x0000003d992bce73 in std::terminate() () from /usr/lib64/libstdc++.so.6
+    #5  0x0000003d992bd3cf in __cxa_pure_virtual () from /usr/lib64/libstdc++.so.6
+    #6  0x00002aaaabc3cc35 in QCoreApplication::postEvent(QObject*, QEvent*, int) () 
+           from /usr/local/Trolltech/Qt-4.8.2/lib/libQtCore.so.4
+    #7  0x00002aaaabc5301d in QMetaObject::activate(QObject*, QMetaObject const*, int, void**) () 
+           from /usr/local/Trolltech/Qt-4.8.2/lib/libQtCore.so.4
+    #8  0x00002aaaab7b81a1 in ?? () from /usr/local/Trolltech/Qt-4.8.2/lib/libQtNetwork.so.4
+    #9  0x00002aaaab7ac3ad in ?? () from /usr/local/Trolltech/Qt-4.8.2/lib/libQtNetwork.so.4
+    #10 0x00002aaaab7c8d1d in ?? () from /usr/local/Trolltech/Qt-4.8.2/lib/libQtNetwork.so.4
+    #11 0x00002aaaab7cadb0 in ?? () from /usr/local/Trolltech/Qt-4.8.2/lib/libQtNetwork.so.4
+    #12 0x00002aaaab7a89ce in QNetworkAccessManager::createRequest(QNetworkAccessManager::Operation, QNetworkRequest const&, QIODevice*)               () 
+          from /usr/local/Trolltech/Qt-4.8.2/lib/libQtNetwork.so.4
+    #13 0x00002aaaab7a5ea4 in QNetworkAccessManager::get(QNetworkRequest const&) ()
+                     from /usr/local/Trolltech/Qt-4.8.2/lib/libQtNetwork.so.4
+    #14 0x00000000004088fe in DownloadManager::getContent (this=0x409fff40, url=..., toCodec=...)
+                         at src/downloadmanager.cpp:55
+    #15 0x0000000000415248 in SpiderThread::run (this=0x7fffffffe2b0) at src/spiderthread.cpp:27
+    #16 0x00002aaaabb2c3b9 in ?? () from /usr/local/Trolltech/Qt-4.8.2/lib/libQtCore.so.4
+    #17 0x0000003c0e40677d in start_thread () from /lib64/libpthread.so.0
+    #18 0x0000003c0dcd325d in clone () from /lib64/libc.so.6
+
+Please help me, I spent so much time to find what's wrong,but it still not work.I made some mistake?
+qt
+shareimprove this question
+	
+edited Jun 11 '12 at 10:01
+
+	
+asked Jun 11 '12 at 3:31
+Linuxsong
+83
+	
+   	 
+	
+Try creating QNetworkAccessManager on the heap, some Qt objects don't behave well on the stack. Also as noted in the docs: "One QNetworkAccessManager should be enough for the whole Qt application.", you seem to be creating a short lived one for every request which may not be helping things. –  cmannett85 Jun 11 '12 at 7:24
+   	 
+	
+Thank you for your suggestion.I try creating QNetworkAccessManager on the heap,but it still not work.One QNetworkAccessManager has "6 requests are executed in parallel for one host/port combination".It's not enough for my project.So I want to creat more than one QNetworkAccessManager object. –  Linuxsong Jun 13 '12 at 2:22
+   	 
+	
+Hi, I'm encountering the same problem. Did you find a solution? –  SaiyanRiku Mar 26 '14 at 17:02
+add a comment
+1 Answer
+active oldest votes
+up vote 2 down vote accepted
+	
+
+You've needlessly complicated things. The default implementation of QThread::run() already creates and runs an event loop. Don't derive from QThread. Put your functionality into a QObject, and call moveToThread(thread) on that object once you have started the thread, if necessary! Use signals and slots to get things done. QNetworkAccessManager already uses a worker thread IIRC, so it's probably pointless to create it in a yet another dedicated thread.
+shareimprove this answer
+	
+edited Jun 12 '12 at 16:12
+
+	
+answered Jun 11 '12 at 16:14
+Kuba Ober
+24.6k62269
+	
+   	 
+	
+Thank you @KubaOber .I don't know QThread can use like this before.But derive from QThread should works, I don't know the reason why my code has crash.I will trying use signals and slots to get things done. –  Linuxsong Jun 13 '12 at 2:36
+   	 
+	
+You need to post complete code. Reduce unnecessary parts that sill reproduce the problem. You may figure it out yourself while you do that. Again, there is no need at all to create another thread until you profile your application and show that it's CPU bound (pegs one CPU core at 100%). –  Kuba Ober Jun 13 '12 at 2:41
+add a comment

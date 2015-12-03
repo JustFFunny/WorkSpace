@@ -1,0 +1,5 @@
+http://stackoverflow.com/questions/28002318/download-file-from-a-website
+
+
+2.QNetWorkAccessManger  Put your QNetworkAccessManager as a member variable or somewhere where it lives for at least the duration of the download.
+
