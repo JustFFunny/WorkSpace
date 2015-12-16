@@ -2,4 +2,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     TestSubdirsProject \
-    testSubPro
+    testSubPro \
+    testNULLEmpty
