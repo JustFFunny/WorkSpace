@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/language">
+        <file>qiankun.qm</file>
+    </qresource>
+</RCC>
