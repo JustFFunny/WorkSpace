@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+
 #include <QApplication>
 #include <QFileDialog>
 #include <QObject>
@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 //    MainWindow w;
 //    w.show();
   QTranslator _t;
-  _t.load("/home/qiankun.qm");
+  _t.load(":/language/qiankun.qm");
   qApp->installTranslator(&_t);
 
   QString  fileName = QFileDialog::getSaveFileName(NULL, \
