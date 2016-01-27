@@ -1,0 +1,14 @@
+INPUT(
+./release\main.o
+./release\mainwindow.o
+./release\buttondelegate.o
+./release\tablemodel.o
+./release\tableview.o
+./release\icondelegate.o
+./release\moc_mainwindow.o
+./release\moc_buttondelegate.o
+./release\moc_tablemodel.o
+./release\moc_tableview.o
+./release\moc_icondelegate.o
+./release\qrc_res.o
+);
