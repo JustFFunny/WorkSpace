@@ -1,0 +1,90 @@
+#include <QCoreApplication>
+#include <QDebug>
+class Test
+{
+public:
+    Test():m_i(1) {}
+    void print()
+    {
+        qDebug()<<m_i;
+    }
+    void add()
+    {
+        qDebug()<<++m_i;
+    }
+
+    ~Test(){qDebug()<<"destructor"<<m_i;}
+private:
+    int m_i;
+
+};
+#include <QSharedPointer>
+#include <QWeakPointer>
+
+#include <QScopedPointer>
+#include <QTimer>
+#include <QObject>
+
+int main(int argc, char *argv[])
+{
+    //QCoreApplication a(argc, argv);
+
+    {
+        //实现了非引用计数的独享资源的强类型指针
+        QScopedPointer<Test> _scopedPoint(new Test());
+        _scopedPoint->print();
+        //QScopedPointer<Test> _scopedPoint2(_scopedPoint); //error: private copyConstruct && =Function
+
+    }
+
+    qDebug()<<"\n/////////////////////////////////////\n";
+
+    {
+        QSharedPointer<Test> _sharedPointTest(new Test());
+        // _sharedPointTest->print();
+        // QSharedPointer<Test> _sharedPointTest2(_sharedPointTest);
+        QSharedPointer<Test> _sharedPointTest2=_sharedPointTest;
+        _sharedPointTest->print();
+        _sharedPointTest2->print();
+        _sharedPointTest2->add();
+        _sharedPointTest2->print();
+        _sharedPointTest->print();
+
+        QWeakPointer<Test> _weakPoint(_sharedPointTest2);
+        qDebug()<<_weakPoint.data()<<_weakPoint.isNull();
+
+        Test* _testPtr=new Test();
+        QSharedPointer<Test> _sharedPtr(_testPtr);
+        QWeakPointer<Test> _weakPtr(_sharedPtr);
+        qDebug()<<_weakPtr.isNull();
+        delete _testPtr;
+        qDebug()<<_weakPtr.isNull();
+    }
+    qDebug()<<"\n/////////////////////////////////////\n";
+    {
+        Test* _testPtr=new Test();
+        QSharedPointer<Test> _sharedPtr(_testPtr);
+        QWeakPointer<Test> _weakPtr(_sharedPtr);
+        qDebug()<<_weakPtr.isNull();
+        qDebug()<<_weakPtr.isNull();
+    }
+    qDebug()<<"\n/////////////////////////////////////\n";
+    {
+        Test* _testPtr=new Test();
+        // QWeakPointer<Test> _weakPtr=_testPtr;//error:special constructor that is enabled only if X derives from QObject
+        // delete _testPtr;
+        // qDebug()<<_weakPtr.isNull();
+
+        QTimer * _timerPtr=new QTimer;
+        QWeakPointer<QTimer> _weakPtr=_timerPtr;
+        qDebug()<<_weakPtr.isNull();
+        delete _timerPtr;
+        _timerPtr=NULL;
+        qDebug()<< _weakPtr.isNull();
+
+
+    }
+
+    return 0;
+    // return a.exec();
+}
